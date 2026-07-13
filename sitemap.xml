@@ -61,6 +61,12 @@
         <loc>https://maplibre.org/martin/sources-files/</loc>
       </url>
       <url>
+        <loc>https://maplibre.org/martin/sources-mbtiles/</loc>
+      </url>
+      <url>
+        <loc>https://maplibre.org/martin/sources-pmtiles/</loc>
+      </url>
+      <url>
         <loc>https://maplibre.org/martin/pg-connections/</loc>
       </url>
       <url>
@@ -71,6 +77,12 @@
       </url>
       <url>
         <loc>https://maplibre.org/martin/sources-cog-files/</loc>
+      </url>
+      <url>
+        <loc>https://maplibre.org/martin/sources-geojson/</loc>
+      </url>
+      <url>
+        <loc>https://maplibre.org/martin/sources-passthrough/</loc>
       </url>
       <url>
         <loc>https://maplibre.org/martin/sources-composite/</loc>
