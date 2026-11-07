@@ -6,13 +6,19 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for Martin Tile Server">
+        <meta name="description" content="Serving tiles from local or remote PMTiles archives">
       
       
         <meta name="author" content="Maplibre Contributors">
       
       
         <link rel="canonical" href="https://maplibre.org/martin/sources-pmtiles/">
+      
+      
+        <link rel="describedby" href="../llms.txt">
+        
+          <link rel="alternate" type="text/markdown" href="./index.md">
+        
       
       
         <link rel="prev" href="../sources-mbtiles/">
@@ -25,7 +31,7 @@
       
       
       <link rel="icon" href="../images/favicon.ico">
-      <meta name="generator" content="zensical-0.0.50">
+      <meta name="generator" content="zensical-0.1.0">
     
     
       
@@ -36,12 +42,12 @@
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.62c9b9cc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.4ab2de0c.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
       
       
   
@@ -131,7 +137,19 @@
 
     
     
-  </head>
+  <meta property="og:type" content="website" />
+<meta property="og:title" content="PMTiles File Sources - Martin Tile Server Documentation" />
+<meta property="og:description" content="Serving tiles from local or remote PMTiles archives" />
+<meta property="og:image" content="https://maplibre.org/martin/assets/images/social/sources-pmtiles.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://maplibre.org/martin/sources-pmtiles/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="PMTiles File Sources - Martin Tile Server Documentation" />
+<meta property="twitter:description" content="Serving tiles from local or remote PMTiles archives" />
+<meta property="twitter:image" content="https://maplibre.org/martin/assets/images/social/sources-pmtiles.png" />
+</head>
   
   
     
@@ -146,14 +164,11 @@
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#pmtiles-file-sources" class="md-skip">
-          Skip to content
-        </a>
-      
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
     </div>
     <div data-md-component="announce">
       
@@ -168,13 +183,13 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="./.." title="Martin Tile Server Documentation" class="md-header__button md-logo" aria-label="Martin Tile Server Documentation" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  <img src="../images/logo.svg" alt="Martin Tile Server Documentation">
 
     </a>
-    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+    <label class="md-header__button md-icon" for="__drawer">
       
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -236,9 +251,10 @@
     
       
       
-        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+        <label class="md-header__button md-icon" for="__search">
           
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Search</span>
         </label>
         <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
   <button type="button" class="md-search__button">
@@ -252,7 +268,7 @@
         <a href="https://github.com/maplibre/martin" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -273,31 +289,11 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="./.." class="md-tabs__link">
-        
-  
-  Introduction
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
       
       
         
           
-        
-      
-        
-      
         
       
         
@@ -309,64 +305,10 @@
     
     
       <li class="md-tabs__item">
-        <a href="../quick-start/" class="md-tabs__link">
+        <a href="./.." class="md-tabs__link">
           
   
-  Quick Start
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../installation/" class="md-tabs__link">
-        
-  
-  Installation
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    
-      
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-    
-      <li class="md-tabs__item">
-        <a href="../run/" class="md-tabs__link">
-          
-  
-  Running
+  Getting Started
 
         </a>
       </li>
@@ -385,7 +327,31 @@
       
       
         
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
           
+        
+      
         
       
         
@@ -397,30 +363,17 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../config-file/" class="md-tabs__link">
+        <a href="../run/" class="md-tabs__link">
           
   
-  Configuration File
+  Usage
 
         </a>
       </li>
     
   
 
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../using/" class="md-tabs__link">
-        
-  
-  Available API Endpoints
-
-      </a>
-    </li>
+    
   
 
       
@@ -496,6 +449,34 @@
   
 
       
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../migration-guide/" class="md-tabs__link">
+          
+  
+  Releases
+
+        </a>
+      </li>
+    
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -528,8 +509,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="./.." title="Martin Tile Server Documentation" class="md-nav__button md-logo" aria-label="Martin Tile Server Documentation" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  <img src="../images/logo.svg" alt="Martin Tile Server Documentation">
 
     </a>
     Martin Tile Server Documentation
@@ -539,7 +519,7 @@
       <a href="https://github.com/maplibre/martin" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -555,9 +535,40 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="./.." class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+  
+    <a href="./.." class="md-nav__link">
+      
   
   
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -565,167 +576,7 @@
   <span class="md-ellipsis">
     
   
-  Introduction
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    <a href="../quick-start/" class="md-nav__link">
-      
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Martin Quick Start Guide
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Installation
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    <a href="../run/" class="md-nav__link">
-      
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 16.5v-9l6 4.5M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Usage
+  Getting Started
 
     
   </span>
@@ -755,7 +606,7 @@
     
       
         
-          
+      
         
       
         
@@ -780,7 +631,619 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Usage
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Usage
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../run/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 16.5v-9l6 4.5M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Running
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1" id="__nav_2_1_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Running
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-with-cli/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 19v-3h8v3zm-4.5-6L2.47 7h4.24l4.96 4.95c.58.59.58 1.55 0 2.12L6.74 19H2.5z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Command Line Interface
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../env-vars/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.41 3c1.39 2.71 1.94 5.84 1.59 9-.2 3.16-1.3 6.29-3.17 9l-1.53-1c1.61-2.43 2.55-5.2 2.7-8 .34-2.8-.11-5.57-1.3-8zM5.17 3 6.7 4C5.09 6.43 4.15 9.2 4 12c-.34 2.8.12 5.57 1.3 8l-1.69 1c-1.4-2.71-1.96-5.83-1.61-9 .2-3.16 1.3-6.29 3.17-9m6.91 7.68 2.32-3.23h2.53l-3.78 5 2.2 4.92h-2.26L11.71 14l-2.43 3.33H6.76l3.9-5.12-2.13-4.76h2.27z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Environment Variables
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.79 15.41c.95-2.17.95-4.66 0-6.82l-2.74 1.24c.6 1.38.6 2.95.01 4.34zm-4.37-11.2a8.54 8.54 0 0 0-6.83 0l1.24 2.73c1.39-.59 2.96-.59 4.35.01zM4.21 8.58a8.56 8.56 0 0 0 0 6.84l2.74-1.25c-.6-1.38-.6-2.96 0-4.35zm4.38 11.21a8.5 8.5 0 0 0 6.83-.01l-1.24-2.73a5.5 5.5 0 0 1-4.34.01zM12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 6a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Troubleshooting
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Deployment
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Deployment
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-with-docker/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Docker</title><path d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.186.186 0 0 0-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51q-.508.001-1.01.087c-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.75.75 0 0 0-.75.748 11.4 11.4 0 0 0 .692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137a15.7 15.7 0 0 0 2.93-.266 12.3 12.3 0 0 0 3.823-1.389 10.5 10.5 0 0 0 2.61-2.136c1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Docker
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-with-docker-compose/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Docker</title><path d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 0 0 .184-.186V6.29a.185.185 0 0 0-.185-.185H8.1a.185.185 0 0 0-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 0 0 .185-.186V6.29a.185.185 0 0 0-.185-.185H5.136a.186.186 0 0 0-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 0 0 .185-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.186.186 0 0 0-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 0 0 .184-.185V9.006a.185.185 0 0 0-.184-.186h-2.12a.185.185 0 0 0-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51q-.508.001-1.01.087c-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.75.75 0 0 0-.75.748 11.4 11.4 0 0 0 .692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137a15.7 15.7 0 0 0 2.93-.266 12.3 12.3 0 0 0 3.823-1.389 10.5 10.5 0 0 0 2.61-2.136c1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Docker Compose
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-with-lambda/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M180.4 203c-.7 22.6 10.6 32.7 10.9 39-.1 1.3-.6 2.5-1.3 3.6s-1.7 2-2.8 2.6l-12.8 9c-1.7 1.2-3.6 1.8-5.6 1.9-.4 0-8.2 1.8-20.5-25.6-7.5 9.4-17 16.9-27.9 22s-22.7 7.7-34.7 7.5c-16.3.9-60.4-9.2-58.1-56.2-1.6-38.3 34.1-62.1 70.9-60 7.1 0 21.6.4 47 6.3v-15.6c2.7-26.5-14.7-47-44.8-43.9-2.4 0-19.4-.5-45.8 10.1-7.4 3.4-8.3 2.8-10.8 2.8-7.4 0-4.4-21.5-2.9-24.2 5.2-6.4 35.9-18.4 65.9-18.2 20.1-1.8 40.1 4.4 55.7 17.3 6.3 7.1 11.2 15.4 14.2 24.4s4.2 18.5 3.5 28v69.3zM94 235.4c32.4-.5 46.2-20 49.3-30.5 2.5-10.1 2.1-16.4 2.1-27.4-9.7-2.3-23.6-4.9-39.6-4.9-15.2-1.1-42.8 5.6-41.7 32.3-1.2 16.8 11.1 31.4 30 30.5zm170.9 23.1c-7.9.7-11.5-4.9-12.7-10.4L202.4 83.4c-1-2.8-1.6-5.6-1.9-8.6-.2-1.2.1-2.4.8-3.4s1.8-1.6 3-1.8h22.2c8.8-.9 11.6 6 12.6 10.4l35.8 140.8L308.1 80c.5-3.2 2.9-11.1 12.8-10.2h17.2c2.2-.2 11.1-.5 12.7 10.4l33.3 142.5L421 80.1c.5-2.2 2.7-11.4 12.7-10.4h19.7c.9-.1 6.2-.8 5.3 8.6-.4 1.8 3.4-10.7-52.8 169.9-1.1 5.5-4.8 11.1-12.7 10.4h-18.7c-10.9 1.2-12.5-9.7-12.7-10.7l-33.2-137.1-32.8 137c-.2 1.1-1.7 11.9-12.7 10.7h-18.3zm273.5 5.6c-5.9 0-33.9-.3-57.4-12.3-2.3-1-4.3-2.6-5.7-4.8s-2.1-4.6-2.1-7.1v-10.7c0-8.5 6.2-6.9 8.8-5.9 10 4.1 16.5 7.1 28.8 9.6 36.7 7.5 52.8-2.3 56.7-4.5 13.2-7.8 14.2-25.7 5.3-34.9-10.5-8.8-15.5-9.1-53.1-21-4.6-1.3-43.7-13.6-43.8-52.4-.6-28.2 25-56.2 69.5-56 12.7 0 46.4 4.1 55.6 15.6 1.4 2.1 2 4.6 1.9 7v10.1c0 4.4-1.6 6.7-4.9 6.7-7.7-.9-21.4-11.2-49.2-10.8-6.9-.4-39.9.9-38.4 25-.4 19 26.6 26.1 29.7 26.9 36.5 11 48.6 12.8 63.1 29.6 17.1 22.2 7.9 48.3 4.3 55.4-19.1 37.5-68.4 34.4-69.3 34.4zM578.6 369c-70 51.7-171.7 79.2-258.5 79.2C203 449 89.8 405.9 2.8 327.5c-6.5-5.9-.8-14 7.2-9.5 96.5 55.2 205.7 84.2 316.9 84.1 83-.4 165.1-17.3 241.6-49.5 11.8-5 21.8 7.8 10.1 16.4m29.2-33.3c-9-11.5-59.3-5.4-81.8-2.7-6.8.8-7.9-5.1-1.8-9.5 40.1-28.2 105.9-20.1 113.4-10.6s-2.1 75.4-39.6 106.9c-5.8 4.9-11.3 2.3-8.7-4.1 8.4-21.3 27.4-68.5 18.4-80z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  AWS Lambda
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+  
+    <a href="../run-with-reverse-proxy/" class="md-nav__link">
+      
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 19h1a1 1 0 0 1 1 1h7v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-7zM4 3h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1m5 4h1V5H9zm0 8h1v-2H9zM5 5v2h2V5zm0 8v2h2v-2z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Reverse Proxies
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Available API Endpoints
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Available API Endpoints
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../using/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 7H5a2 2 0 0 0-2 2v8h2v-4h2v4h2V9a2 2 0 0 0-2-2m0 4H5V9h2m7-2h-4v10h2v-4h2a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2m0 4h-2V9h2m6 0v6h1v2h-4v-2h1V9h-1V7h4v2Z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Martin Endpoints
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ogc-api/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 7H5a2 2 0 0 0-2 2v8h2v-4h2v4h2V9a2 2 0 0 0-2-2m0 4H5V9h2m7-2h-4v10h2v-4h2a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2m0 4h-2V9h2m6 0v6h1v2h-4v-2h1V9h-1V7h4v2Z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  OGC API - Tiles
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -803,26 +1266,27 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2_4">
+              <span class="md-nav__icon md-icon"></span>
+              
   
   Configuration File
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+              
+                
+                  
   
   
     
@@ -854,19 +1318,16 @@
       
       
         
-          
-          
-        
       
     
     
       
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -887,26 +1348,27 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_2" id="__nav_5_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5_2">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2_4_2">
+              <span class="md-nav__icon md-icon"></span>
+              
   
   Tile sources
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+              
+                
+                  
   
   
     
@@ -939,7 +1401,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -962,26 +1424,27 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_2_2" id="__nav_5_2_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_4_2_2" id="__nav_2_4_2_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_2_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2_4_2_2">
+              <span class="md-nav__icon md-icon"></span>
+              
   
   MBTiles and PMTiles File Sources
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+              
+                
+                  
   
   
   
@@ -1007,10 +1470,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
     
@@ -1104,75 +1567,69 @@
   <a href="#serving-pmtiles-from-local-file-systems-http-or-object-storage" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Serving PMTiles from local file systems, http or Object Storage
+        Serving PMTiles from local file systems, HTTP, or object storage
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Serving PMTiles from local file systems, http or Object Storage">
+    <nav class="md-nav" aria-label="Serving PMTiles from local file systems, HTTP, or object storage">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#available-http-client-settings" class="md-nav__link">
+  <a href="#local-files" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Available http client settings
+        Local files
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Available http client settings">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-files-and-prefixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Remote files and prefixes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#https" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HTTP(S)
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-s3-and-s3-compatible-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Amazon S3 and S3-compatible storage
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amazon S3 and S3-compatible storage">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#security-options" class="md-nav__link">
+  <a href="#available-amazon-s3-settings" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Security options
+        Available Amazon S3 settings
       </span>
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#connection-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Connection options
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#proxy-settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Proxy settings
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#available-aws-s3-settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Available AWS S3 settings
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Available AWS S3 settings">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#aws-specific-authentication-credentials" class="md-nav__link">
@@ -1218,55 +1675,33 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#security-options_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Security options
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#connection-options_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Connection options
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#proxy-settings_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Proxy settings
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#available-google-settings" class="md-nav__link">
+  <a href="#google-cloud-storage" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Available google settings
+        Google Cloud Storage
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Available google settings">
+    <nav class="md-nav" aria-label="Google Cloud Storage">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-google-cloud-storage-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Available Google Cloud Storage settings
+      </span>
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#google-specific-configuration" class="md-nav__link">
@@ -1279,55 +1714,33 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#security-options_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Security options
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#connection-options_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Connection options
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#proxy-settings_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Proxy settings
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#available-azure-settings" class="md-nav__link">
+  <a href="#microsoft-azure-storage" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Available azure settings
+        Microsoft Azure Storage
       </span>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Available azure settings">
+    <nav class="md-nav" aria-label="Microsoft Azure Storage">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-microsoft-azure-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Available Microsoft Azure settings
+      </span>
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#azure-specific-authentication-credentials" class="md-nav__link">
@@ -1362,8 +1775,36 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+        
           <li class="md-nav__item">
-  <a href="#security-options_3" class="md-nav__link">
+  <a href="#http-client-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HTTP client settings
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTP client settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-client-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Available client settings
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-options" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
         Security options
@@ -1374,7 +1815,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#connection-options_3" class="md-nav__link">
+  <a href="#connection-options" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
         Connection options
@@ -1385,7 +1826,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#proxy-settings_3" class="md-nav__link">
+  <a href="#proxy-settings" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
         Proxy settings
@@ -1397,6 +1838,17 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#urls-secrets-and-saved-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        URLs, secrets, and saved configuration
+      </span>
+    </span>
+  </a>
   
 </li>
         
@@ -1412,18 +1864,19 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1433,6 +1886,8 @@
       
         
           
+        
+      
         
       
         
@@ -1456,6 +1911,7 @@
     <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
       
         
+  
   
   
   
@@ -1485,10 +1941,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1514,10 +1970,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1543,10 +1999,39 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sources-duckdb/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>DuckDB</title><path d="M12 0C5.363 0 0 5.363 0 12s5.363 12 12 12 12-5.363 12-12S18.637 0 12 0M9.502 7.03a4.974 4.974 0 0 1 4.97 4.97 4.974 4.974 0 0 1-4.97 4.97A4.974 4.974 0 0 1 4.532 12a4.974 4.974 0 0 1 4.97-4.97m6.563 3.183h2.351c.98 0 1.787.782 1.787 1.762s-.807 1.789-1.787 1.789h-2.351z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  DuckDB Sources
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
   
   
   
@@ -1572,47 +2057,79 @@
     </li>
   
 
+                
               
-            
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
               
                 
+                  
   
   
   
   
-    <li class="md-nav__item">
-      <a href="../sources-composite/" class="md-nav__link">
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
         
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 0 3 7l1.63 1.27L12 14l7.36-5.73L21 7zm7.37 10.73L12 16.47l-7.38-5.73L3 12l9 7 9-7zm0 5L12 21.47l-7.38-5.73L3 17l9 7 9-7z"/></svg>
+  
+  
+    <a href="../sources-composite/" class="md-nav__link">
+      
+  
   
   <span class="md-ellipsis">
     
   
-  Composite Sources
+  Tile Serving
 
     
   </span>
   
   
 
-      </a>
-    </li>
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
   
 
-              
-            
-          </ul>
-        </nav>
       
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1632,25 +2149,151 @@
       
       
         
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+  
+    <a href="../martin-cp/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Tile Generation
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
           
-          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
         
       
     
     
       
+        
+        
+      
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+  
+    <a href="../postprocessing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Postprocessing
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
       
         
         
-          
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="">
-            
+  
+  
+  
+  
+    <a href="../sources-sprites/" class="md-nav__link">
+      
   
   
   <span class="md-ellipsis">
@@ -1663,145 +2306,31 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_3">
-            <span class="md-nav__icon md-icon"></span>
-            
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
   
-  Supporting Resources
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
+      
+    </li>
+  
+
                 
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sources-sprites/" class="md-nav__link">
+              
+            </ul>
+          </nav>
         
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 13.5v8H3v-8zM12 2l5.5 9h-11zm5.5 11c2.5 0 4.5 2 4.5 4.5S20 22 17.5 22 13 20 13 17.5s2-4.5 4.5-4.5"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Sprites
-
-    
-  </span>
-  
-  
-
-      </a>
+      
     </li>
   
 
-              
-            
-              
                 
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sources-styles/" class="md-nav__link">
+              
+            </ul>
+          </nav>
         
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.5 12a1.5 1.5 0 0 1-1.5-1.5A1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-3-4A1.5 1.5 0 0 1 13 6.5 1.5 1.5 0 0 1 14.5 5 1.5 1.5 0 0 1 16 6.5 1.5 1.5 0 0 1 14.5 8m-5 0A1.5 1.5 0 0 1 8 6.5 1.5 1.5 0 0 1 9.5 5 1.5 1.5 0 0 1 11 6.5 1.5 1.5 0 0 1 9.5 8m-3 4A1.5 1.5 0 0 1 5 10.5 1.5 1.5 0 0 1 6.5 9 1.5 1.5 0 0 1 8 10.5 1.5 1.5 0 0 1 6.5 12M12 3a9 9 0 0 0-9 9 9 9 0 0 0 9 9 1.5 1.5 0 0 0 1.5-1.5c0-.39-.15-.74-.39-1-.23-.27-.38-.62-.38-1a1.5 1.5 0 0 1 1.5-1.5H16a5 5 0 0 0 5-5c0-4.42-4.03-8-9-8"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Styles
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sources-fonts/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 8h3v12h1v1h-4v-1h1v-3h-4l-1.5 3H14v1h-4v-1h1zm1 1-3.5 7H18zM5 3h5c1.11 0 2 .89 2 2v11H9v-5H6v5H3V5c0-1.11.89-2 2-2m1 2v4h3V5z"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Fonts
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../using/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 7H5a2 2 0 0 0-2 2v8h2v-4h2v4h2V9a2 2 0 0 0-2-2m0 4H5V9h2m7-2h-4v10h2v-4h2a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2m0 4h-2V9h2m6 0v6h1v2h-4v-2h1V9h-1V7h4v2Z"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Available API Endpoints
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1844,6 +2373,7 @@
     <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
       
         
+  
   
   
   
@@ -1915,6 +2445,7 @@
   
   
   
+  
     <a href="../development/" class="md-nav__link">
       
   
@@ -1925,6 +2456,65 @@
     
   
   Development
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+  
+    <a href="../migration-guide/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Releases
 
     
   </span>
@@ -1957,28 +2547,65 @@
 
 
 
-  
-
 
   <nav class="md-path" aria-label="Navigation" >
     <ol class="md-path__list">
       
+      
         
   
   
-    <li class="md-path__item">
-      <a href="./.." class="md-path__link">
+    
+    
+      
         
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../run/" class="md-path__link">
+          
   
   <span class="md-ellipsis">
-    Introduction
+    Usage
   </span>
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
-      
+    
+  
+
       
         
   
@@ -1988,6 +2615,12 @@
       
         
           
+        
+      
+        
+      
+        
+      
         
       
         
@@ -2089,8 +2722,10 @@
 
               
               <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
                 
                   
+
   
     <a href="https://github.com/maplibre/martin/edit/main/docs/content/sources-pmtiles.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
@@ -2119,19 +2754,30 @@ it and use it with <code>--config my-config.yaml</code> option.</p>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">paths</span><span class="p">:</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/pmtiles/directory</span>
 </span></code></pre></div>
-<p>For remote object-storage prefixes (<code>s3://bucket/prefix/</code>, <code>gs://bucket/prefix/</code>, <code>https://host/prefix/</code>, etc.) Martin periodically re-lists the prefix and diffs against the previous snapshot, taking into account
+<div class="admonition tip">
+<p class="admonition-title">Scanning subdirectories</p>
+<p>Set <code>recursive: true</code> next to <code>paths</code> to scan subdirectories too.
+A nested file is named by its path relative to the scanned directory with <code>/</code> replaced by <code>.</code>, so <code>2024/roads.pmtiles</code> becomes <code>2024.roads</code>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Per-project directories</p>
+<p>List a directory of project directories under <code>collections</code> to publish every file inside a project as <code>&lt;project&gt;.&lt;file&gt;</code>, so <code>/projects/tiles/project1/roads.pmtiles</code> becomes <code>project1.roads</code>.
+A collection is a local directory.</p>
+</div>
+<p>For remote object-storage prefixes (<code>s3://bucket/prefix/</code>, <code>gs://bucket/prefix/</code>, etc.) Martin periodically re-lists the prefix and diffs against the previous snapshot, taking into account
 object <code>ETag</code> or <code>Last-Modified</code> headers to detect updates to an existing source.
 There is no event channel from blob storage to subscribe to.
 Added, updated, and removed objects propagate to the catalog.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">pmtiles</span><span class="p">:</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">paths</span><span class="p">:</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3://my-bucket/tiles/</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">reload_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span><span class="w">  </span><span class="c1"># default; set to &quot;0s&quot; to disable remote polling</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">reload_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span><span class="w">  </span><span class="c1"># default; set to "0s" to disable remote polling</span>
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Hot reload applies to directories and remote prefixes configured under <code>pmtiles.paths</code> (or passed on the CLI).
-Named sources listed under <code>pmtiles.sources</code> and individual remote-file URLs are snapshotted at startup and are not watched for changes.</p>
+Named sources listed under <code>pmtiles.sources</code> and individual remote-file URLs are snapshotted at startup and are not watched for changes.
+An object under a polled prefix that is also listed under <code>pmtiles.sources</code> is served once, under its configured id and with its own settings (such as <code>convert_to_contour</code> or <code>cache_control</code>); the prefix listing skips it.</p>
 </div>
 <h2 id="serving-pmtiles-without-a-tile-server">Serving PMTiles without a Tile Server</h2>
 <p>PMTiles archives can be served directly from HTTP range-capable storage without a dedicated tile server.
@@ -2148,194 +2794,72 @@ This approach has several limitations:</p>
 <li><strong>Caching behavior</strong>
   Cache efficiency may be reduced compared to setups with a dedicated tile server that can optimize request patterns.</li>
 </ul>
-<h2 id="serving-pmtiles-from-local-file-systems-http-or-object-storage">Serving PMTiles from local file systems, http or Object Storage</h2>
-<p>The settings available for a PMTiles source depend on the backend:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Local File System</label><label for="__tabbed_1_2">Http(s)</label><label for="__tabbed_1_3">Amazon S3</label><label for="__tabbed_1_4">Google Cloud Storage</label><label for="__tabbed_1_5">Microsoft Azure</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p>For local sources, you need to provide the path or URL.
-For example:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>martin<span class="w">  </span>path/to/tiles.pmtiles
+<h2 id="serving-pmtiles-from-local-file-systems-http-or-object-storage">Serving PMTiles from local file systems, HTTP, or object storage</h2>
+<h3 id="local-files">Local files</h3>
+<p>Pass a path or <code>file://</code> URL on the command line:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>martin<span class="w"> </span>path/to/tiles.pmtiles
 </span></code></pre></div>
-<p>The available schemes are:</p>
-<ul>
-<li><code>file:///path/to/my/file.pmtiles</code></li>
-<li><code>path/to/my/file.pmtiles</code></li>
-</ul>
-<p>You can also configure this via the configuration file:</p>
+<p>Or configure a named source:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">pmtiles</span><span class="p">:</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">sources</span><span class="p">:</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">tiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file:///path/to/my/file.pmtiles</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">tiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file:///path/to/tiles.pmtiles</span>
 </span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<p>For HTTP(s), you need to provide the url.
-For example:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>martin<span class="w">  </span>https://example.com/tiles.pmtiles
+<h3 id="remote-files-and-prefixes">Remote files and prefixes</h3>
+<p>PMTiles supports HTTP(S), Amazon S3 and compatible services, Google Cloud Storage, and Microsoft Azure Storage.
+For example, configure a named S3 or S3-compatible source with:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">pmtiles</span><span class="p">:</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:9000</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">allow_http</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">access_key_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${AWS_ACCESS_KEY_ID}</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">secret_access_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${AWS_SECRET_ACCESS_KEY}</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nt">sources</span><span class="p">:</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">tiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3://my-bucket/tiles.pmtiles</span>
 </span></code></pre></div>
-<p>The available url schemes are:</p>
-<ul>
-<li><code>http://example.com/path.pmtiles</code></li>
-<li><code>https://example.com/path.pmtiles</code></li>
-</ul>
-<p>If you want more control over your requests, you can configure additional options here as such:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">pmtiles</span><span class="p">:</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">allow_http</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">sources</span><span class="p">:</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">tiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3://bucket/path/to/tiles.pmtiles</span>
-</span></code></pre></div>
-<h3 id="available-http-client-settings">Available http client settings</h3>
-<h4 id="security-options">Security options</h4>
-<table>
-<thead>
-<tr>
-<th>configuration</th>
-<th>description</th>
-<th>example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>allow_http</code></td>
-<td>Allow non-TLS, i.e. non-HTTPS connections<br><br><strong>Security warning:</strong><br>If you enable this option, attackers may be able to read the data you request</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>allow_invalid_certificates</code></td>
-<td>Skip certificate validation on https connections<br><br><strong>Security warning:</strong><br>You should think very carefully before using this method. If invalid certificates are trusted, any certificate for any site will be trusted for use. This includes expired certificates. This introduces significant vulnerabilities, and should only be used as a last resort or for testing</td>
-<td><code>true</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="connection-options">Connection options</h4>
-<table>
-<thead>
-<tr>
-<th>configuration</th>
-<th>description</th>
-<th>example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>user_agent</code></td>
-<td>User-Agent header to be used by this client</td>
-<td><code>martin 1.0.0</code></td>
-</tr>
-<tr>
-<td><code>randomize_addresses</code></td>
-<td>Randomize order addresses that the DNS resolution yields.<br>This will spread the connections across more servers.</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>connect_timeout</code></td>
-<td>Timeout for only the connect phase of a Client</td>
-<td><code>5s</code></td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td>The timeout is applied from when the request starts connecting until the response body has finished</td>
-<td><code>10s</code></td>
-</tr>
-<tr>
-<td><code>pool_idle_timeout</code></td>
-<td>The pool max idle timeout</td>
-<td><code>5m</code></td>
-</tr>
-<tr>
-<td><code>pool_max_idle_per_host</code></td>
-<td>maximum number of idle connections per host</td>
-<td><code>10</code></td>
-</tr>
-<tr>
-<td><code>http1_only</code></td>
-<td>Only use http1 connections</td>
-<td><code>false</code></td>
-</tr>
-<tr>
-<td><code>http2_only</code></td>
-<td>Only use http2 connections</td>
-<td><code>false</code></td>
-</tr>
-<tr>
-<td><code>http2_keep_alive_interval</code></td>
-<td>Interval for HTTP2 Ping frames should be sent to keep a connection alive.</td>
-<td><code>15s</code></td>
-</tr>
-<tr>
-<td><code>http2_keep_alive_timeout</code></td>
-<td>Timeout for receiving an acknowledgement of the keep-alive ping.</td>
-<td><code>15s</code></td>
-</tr>
-<tr>
-<td><code>http2_keep_alive_while_idle</code></td>
-<td>Enable HTTP2 keep alive pings for idle connections</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>http2_max_frame_size</code></td>
-<td>Sets the maximum frame size to use for HTTP2.</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h4 id="proxy-settings">Proxy settings</h4>
-<table>
-<thead>
-<tr>
-<th>configuration</th>
-<th>description</th>
-<th>example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>proxy_url</code></td>
-<td>HTTP proxy to use for requests</td>
-<td><code>http://proxy.example.com:8080</code></td>
-</tr>
-<tr>
-<td><code>proxy_ca_certificate</code></td>
-<td>PEM-formatted CA certificate for proxy connections</td>
-<td><code>-----BEGIN CERTIFICATE-----</code><br>...<br><code>-----END CERTIFICATE-----</code></td>
-</tr>
-<tr>
-<td><code>proxy_excludes</code></td>
-<td>List of hosts that bypass proxy</td>
-<td><code>example.com</code>, <code>maplibre.org</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="tabbed-block">
-<div class="admonition info">
-<p class="admonition-title">Important</p>
-<p>Even though we name this section <code>Amazon S3</code>, it also works with other providers that support the S3 API, such as <a href="https://www.min.io/">MinIO</a>, <a href="https://docs.ceph.com/en/latest/radosgw/s3/">Ceph</a>, <a href="https://developers.cloudflare.com/r2/">Cloudflare R2</a>, <a href="https://www.hetzner.com/de/storage/object-storage/">hetzner object storage</a> and many more.</p>
-</div>
-<p>For AWS, you need to provide the bucket name and the prefix of the object key.
-For example:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>martin<span class="w">  </span>s3://my-bucket/tiles.pmtiles
-</span></code></pre></div>
-<p>The available url schemes are:</p>
+<p>Remote files are read with byte-range requests, so Martin fetches only the metadata and tile or image chunks it needs instead of downloading the complete object first.
+The same option names and credential-resolution rules apply to PMTiles and COG sources.
+Place these options directly under the source kind's <code>pmtiles</code> or <code>cog</code> configuration section.</p>
+<h3 id="https">HTTP(S)</h3>
+<p>An HTTP(S) URL can identify an individual file.
+The supported schemes are <code>https://</code> and <code>http://</code>.
+Plain <code>http://</code> URLs are refused unless <code>allow_http</code> is set to <code>true</code>.
+This option can only be set in the configuration file, so a plain <code>http://</code> URL cannot be passed on the command line.
+Prefer HTTPS outside trusted networks.</p>
+<p>HTTP(S) URLs cannot be used for prefix discovery because Martin cannot enumerate an ordinary web directory.
+Cloud-provider HTTPS endpoints are handled as ordinary HTTP URLs.
+Use a provider-specific scheme below when Martin must apply cloud credentials or list a prefix.</p>
+<h3 id="amazon-s3-and-s3-compatible-storage">Amazon S3 and S3-compatible storage</h3>
+<p>The S3 backend also works with API-compatible providers such as <a href="https://www.min.io/">MinIO</a>, <a href="https://docs.ceph.com/en/latest/radosgw/s3/">Ceph</a>, <a href="https://developers.cloudflare.com/r2/">Cloudflare R2</a>, and <a href="https://www.hetzner.com/storage/object-storage/">Hetzner Object Storage</a>.</p>
+<p>Use these provider-specific schemes for authenticated access and prefix listing:</p>
 <ul>
 <li><code>s3://&lt;bucket&gt;/&lt;path&gt;</code></li>
 <li><code>s3a://&lt;bucket&gt;/&lt;path&gt;</code></li>
-<li><code>https://s3.&lt;region&gt;.amazonaws.com/&lt;bucket&gt;</code></li>
-<li><code>https://&lt;bucket&gt;.s3.&lt;region&gt;.amazonaws.com</code></li>
-<li><code>https://ACCOUNT_ID.r2.cloudflarestorage.com/bucket</code></li>
 </ul>
-<p>If you want more control over your requests, you can configure additional options here as such:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">pmtiles</span><span class="p">:</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">allow_http</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">sources</span><span class="p">:</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nt">tiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3://bucket/path/to/tiles.pmtiles</span>
-</span></code></pre></div>
+<p>Public or presigned individual objects can also use standard HTTPS endpoint forms:</p>
+<ul>
+<li><code>https://s3.&lt;region&gt;.amazonaws.com/&lt;bucket&gt;/&lt;path&gt;</code></li>
+<li><code>https://&lt;bucket&gt;.s3.&lt;region&gt;.amazonaws.com/&lt;path&gt;</code></li>
+<li><code>https://&lt;account-id&gt;.r2.cloudflarestorage.com/&lt;bucket&gt;/&lt;path&gt;</code></li>
+</ul>
+<p>A directly configured object requires <code>s3:GetObject</code>.
+Discovering a prefix additionally requires <code>s3:ListBucket</code> on the bucket, scoped to that prefix where appropriate.</p>
+<div class="admonition tip">
+<p class="admonition-title">Provider-specific option names</p>
+<p>Every S3 setting is also available with an <code>aws_</code> prefix, such as <code>aws_endpoint</code> and <code>aws_region</code>.
+Prefixes are useful when one source kind contains settings for multiple cloud providers.</p>
+</div>
+<h4 id="available-amazon-s3-settings">Available Amazon S3 settings</h4>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>All settings are also available under the <code>aws_</code> prefix.
-This can be useful if you want to have different cloud providers.</p>
+<p>Next to the explicit configuration for auth and endpoints below, you can also use <code>profile</code> (for example <code>profile: staging</code>) to specify an <a href="https://docs.aws.amazon.com/sdkref/latest/guide/file-format.html">AWS SDK profile</a>.
+Explicit configuration overrides profiles.</p>
 </div>
-<h3 id="available-aws-s3-settings">Available AWS S3 settings</h3>
+<div class="admonition tip">
+<p class="admonition-title">Task roles on ECS, Fargate and EKS</p>
+<p>Martin picks up the credential-discovery variables these runtimes inject (<code>AWS_CONTAINER_CREDENTIALS_RELATIVE_URI</code>, <code>AWS_CONTAINER_CREDENTIALS_FULL_URI</code>, <code>AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE</code>, <code>AWS_WEB_IDENTITY_TOKEN_FILE</code>, <code>AWS_ROLE_ARN</code>, <code>AWS_ROLE_SESSION_NAME</code>, <code>AWS_ENDPOINT_URL_STS</code>) automatically, so task roles, IRSA and Pod Identity work without any of the settings below.
+Explicit configuration and <code>profile</code> override them.
+On EC2, the instance metadata service is used when nothing else is configured.</p>
+</div>
 <h4 id="aws-specific-authentication-credentials">AWS specific Authentication &amp; Credentials</h4>
 <table>
 <thead>
@@ -2488,7 +3012,7 @@ This can be useful if you want to have different cloud providers.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>checksum</code></td>
+<td><code>checksum_algorithm</code></td>
 <td>Checksum algorithm for uploads</td>
 <td><code>SHA256</code></td>
 </tr>
@@ -2498,165 +3022,31 @@ This can be useful if you want to have different cloud providers.</p>
 <td><code>AES256</code></td>
 </tr>
 <tr>
-<td><code>kms_key_id</code></td>
+<td><code>sse_kms_key_id</code></td>
 <td>KMS Key ID for SSE-KMS or DSSE-KMS</td>
 <td><code>arn:aws:kms:us-east-1:123456789012:key/abcd-1234-efgh-5678</code></td>
 </tr>
 <tr>
-<td><code>bucket_key_enabled</code></td>
+<td><code>sse_bucket_key_enabled</code></td>
 <td>Use bucket's default KMS key (<code>true</code>/<code>false</code>)</td>
 <td><code>true</code></td>
 </tr>
 <tr>
-<td><code>customer_encryption_key</code></td>
+<td><code>sse_customer_key_base64</code></td>
 <td>Base64-encoded 256-bit key for SSE-C</td>
 <td><code>MDEyMzQ1Njc4OUFCQ0RFRjAxMjM0NTY3ODlBQkNERUY=</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="security-options_1">Security options</h4>
-<table>
-<thead>
-<tr>
-<th>configuration</th>
-<th>description</th>
-<th>example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>allow_http</code></td>
-<td>Allow non-TLS, i.e. non-HTTPS connections<br><br><strong>Security warning:</strong><br>If you enable this option, attackers may be able to read the data you request</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>allow_invalid_certificates</code></td>
-<td>Skip certificate validation on https connections<br><br><strong>Security warning:</strong><br>You should think very carefully before using this method. If invalid certificates are trusted, any certificate for any site will be trusted for use. This includes expired certificates. This introduces significant vulnerabilities, and should only be used as a last resort or for testing</td>
-<td><code>true</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="connection-options_1">Connection options</h4>
-<table>
-<thead>
-<tr>
-<th>configuration</th>
-<th>description</th>
-<th>example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>user_agent</code></td>
-<td>User-Agent header to be used by this client</td>
-<td><code>martin 1.0.0</code></td>
-</tr>
-<tr>
-<td><code>randomize_addresses</code></td>
-<td>Randomize order addresses that the DNS resolution yields.<br>This will spread the connections across more servers.</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>connect_timeout</code></td>
-<td>Timeout for only the connect phase of a Client</td>
-<td><code>5s</code></td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td>The timeout is applied from when the request starts connecting until the response body has finished</td>
-<td><code>10s</code></td>
-</tr>
-<tr>
-<td><code>pool_idle_timeout</code></td>
-<td>The pool max idle timeout</td>
-<td><code>5m</code></td>
-</tr>
-<tr>
-<td><code>pool_max_idle_per_host</code></td>
-<td>maximum number of idle connections per host</td>
-<td><code>10</code></td>
-</tr>
-<tr>
-<td><code>http1_only</code></td>
-<td>Only use http1 connections</td>
-<td><code>false</code></td>
-</tr>
-<tr>
-<td><code>http2_only</code></td>
-<td>Only use http2 connections</td>
-<td><code>false</code></td>
-</tr>
-<tr>
-<td><code>http2_keep_alive_interval</code></td>
-<td>Interval for HTTP2 Ping frames should be sent to keep a connection alive.</td>
-<td><code>15s</code></td>
-</tr>
-<tr>
-<td><code>http2_keep_alive_timeout</code></td>
-<td>Timeout for receiving an acknowledgement of the keep-alive ping.</td>
-<td><code>15s</code></td>
-</tr>
-<tr>
-<td><code>http2_keep_alive_while_idle</code></td>
-<td>Enable HTTP2 keep alive pings for idle connections</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>http2_max_frame_size</code></td>
-<td>Sets the maximum frame size to use for HTTP2.</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h4 id="proxy-settings_1">Proxy settings</h4>
-<table>
-<thead>
-<tr>
-<th>configuration</th>
-<th>description</th>
-<th>example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>proxy_url</code></td>
-<td>HTTP proxy to use for requests</td>
-<td><code>http://proxy.example.com:8080</code></td>
-</tr>
-<tr>
-<td><code>proxy_ca_certificate</code></td>
-<td>PEM-formatted CA certificate for proxy connections</td>
-<td><code>-----BEGIN CERTIFICATE-----</code><br>...<br><code>-----END CERTIFICATE-----</code></td>
-</tr>
-<tr>
-<td><code>proxy_excludes</code></td>
-<td>List of hosts that bypass proxy</td>
-<td><code>example.com</code>, <code>maplibre.org</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="tabbed-block">
-<p>For Google Cloud, you need to provide the bucket name and the prefix of the object key.
-For example:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>martin<span class="w">  </span>gs://my-bucket/tiles.pmtiles
-</span></code></pre></div>
-<p>The available url scheme is:</p>
-<ul>
-<li><code>gs://bucket/path</code></li>
-</ul>
-<p>If you want more control over your requests, you can configure additional options here as such:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">pmtiles</span><span class="p">:</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">allow_http</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">sources</span><span class="p">:</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nt">tiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gs://bucket/path/to/tiles.pmtiles</span>
-</span></code></pre></div>
+<!-- cspell:ignore AKIAIOSFODNN dsse creds serviceaccount efgh -->
+
+<h3 id="google-cloud-storage">Google Cloud Storage</h3>
+<p>Use a <code>gs://&lt;bucket&gt;/&lt;path&gt;</code> URL for Google Cloud Storage.</p>
 <div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>All settings are also available under the <code>google_</code> prefix.
-This can be useful if you want to have different cloud providers.</p>
+<p class="admonition-title">Provider-specific option names</p>
+<p>Every Google Cloud Storage setting is also available with a <code>google_</code> prefix.</p>
 </div>
-<h3 id="available-google-settings">Available google settings</h3>
+<h4 id="available-google-cloud-storage-settings">Available Google Cloud Storage settings</h4>
 <h4 id="google-specific-configuration">Google specific configuration</h4>
 <table>
 <thead>
@@ -2699,161 +3089,26 @@ This can be useful if you want to have different cloud providers.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="security-options_2">Security options</h4>
-<table>
-<thead>
-<tr>
-<th>configuration</th>
-<th>description</th>
-<th>example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>allow_http</code></td>
-<td>Allow non-TLS, i.e. non-HTTPS connections<br><br><strong>Security warning:</strong><br>If you enable this option, attackers may be able to read the data you request</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>allow_invalid_certificates</code></td>
-<td>Skip certificate validation on https connections<br><br><strong>Security warning:</strong><br>You should think very carefully before using this method. If invalid certificates are trusted, any certificate for any site will be trusted for use. This includes expired certificates. This introduces significant vulnerabilities, and should only be used as a last resort or for testing</td>
-<td><code>true</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="connection-options_2">Connection options</h4>
-<table>
-<thead>
-<tr>
-<th>configuration</th>
-<th>description</th>
-<th>example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>user_agent</code></td>
-<td>User-Agent header to be used by this client</td>
-<td><code>martin 1.0.0</code></td>
-</tr>
-<tr>
-<td><code>randomize_addresses</code></td>
-<td>Randomize order addresses that the DNS resolution yields.<br>This will spread the connections across more servers.</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>connect_timeout</code></td>
-<td>Timeout for only the connect phase of a Client</td>
-<td><code>5s</code></td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td>The timeout is applied from when the request starts connecting until the response body has finished</td>
-<td><code>10s</code></td>
-</tr>
-<tr>
-<td><code>pool_idle_timeout</code></td>
-<td>The pool max idle timeout</td>
-<td><code>5m</code></td>
-</tr>
-<tr>
-<td><code>pool_max_idle_per_host</code></td>
-<td>maximum number of idle connections per host</td>
-<td><code>10</code></td>
-</tr>
-<tr>
-<td><code>http1_only</code></td>
-<td>Only use http1 connections</td>
-<td><code>false</code></td>
-</tr>
-<tr>
-<td><code>http2_only</code></td>
-<td>Only use http2 connections</td>
-<td><code>false</code></td>
-</tr>
-<tr>
-<td><code>http2_keep_alive_interval</code></td>
-<td>Interval for HTTP2 Ping frames should be sent to keep a connection alive.</td>
-<td><code>15s</code></td>
-</tr>
-<tr>
-<td><code>http2_keep_alive_timeout</code></td>
-<td>Timeout for receiving an acknowledgement of the keep-alive ping.</td>
-<td><code>15s</code></td>
-</tr>
-<tr>
-<td><code>http2_keep_alive_while_idle</code></td>
-<td>Enable HTTP2 keep alive pings for idle connections</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>http2_max_frame_size</code></td>
-<td>Sets the maximum frame size to use for HTTP2.</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h4 id="proxy-settings_2">Proxy settings</h4>
-<table>
-<thead>
-<tr>
-<th>configuration</th>
-<th>description</th>
-<th>example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>proxy_url</code></td>
-<td>HTTP proxy to use for requests</td>
-<td><code>http://proxy.example.com:8080</code></td>
-</tr>
-<tr>
-<td><code>proxy_ca_certificate</code></td>
-<td>PEM-formatted CA certificate for proxy connections</td>
-<td><code>-----BEGIN CERTIFICATE-----</code><br>...<br><code>-----END CERTIFICATE-----</code></td>
-</tr>
-<tr>
-<td><code>proxy_excludes</code></td>
-<td>List of hosts that bypass proxy</td>
-<td><code>example.com</code>, <code>maplibre.org</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="tabbed-block">
-<p>For Azure, you need to provide the account name, container and path.
-For example:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>martin<span class="w">  </span>az://my-container/tiles.pmtiles
-</span></code></pre></div>
-<p>The available url schemes are:</p>
+<h3 id="microsoft-azure-storage">Microsoft Azure Storage</h3>
+<p>Use these provider-specific schemes for authenticated access and prefix listing:</p>
 <ul>
-<li><code>abfs[s]://&lt;container&gt;/&lt;path&gt;</code> (according to <a href="https://github.com/fsspec/adlfs">fsspec</a>)</li>
-<li><code>abfs[s]://&lt;file_system&gt;@&lt;account_name&gt;.dfs.core.windows.net/&lt;path&gt;</code></li>
-<li><code>abfs[s]://&lt;file_system&gt;@&lt;account_name&gt;.dfs.fabric.microsoft.com/&lt;path&gt;</code></li>
-<li><code>az://&lt;container&gt;/&lt;path&gt;</code> (according to <a href="https://github.com/fsspec/adlfs">fsspec</a>)</li>
-<li><code>adl://&lt;container&gt;/&lt;path&gt;</code> (according to <a href="https://github.com/fsspec/adlfs">fsspec</a>)</li>
-<li><code>azure://&lt;container&gt;/&lt;path&gt;</code> (custom)</li>
-<li><code>https://&lt;account&gt;.dfs.core.windows.net</code></li>
-<li><code>https://&lt;account&gt;.blob.core.windows.net</code></li>
-<li><code>https://&lt;account&gt;.blob.core.windows.net/&lt;container&gt;</code></li>
-<li><code>https://&lt;account&gt;.dfs.fabric.microsoft.com</code></li>
-<li><code>https://&lt;account&gt;.dfs.fabric.microsoft.com/&lt;container&gt;</code></li>
-<li><code>https://&lt;account&gt;.blob.fabric.microsoft.com</code></li>
-<li><code>https://&lt;account&gt;.blob.fabric.microsoft.com/&lt;container&gt;</code></li>
+<li><code>abfs://&lt;container&gt;/&lt;path&gt;</code> and <code>abfss://&lt;container&gt;/&lt;path&gt;</code></li>
+<li><code>abfs://&lt;file-system&gt;@&lt;account-name&gt;.dfs.core.windows.net/&lt;path&gt;</code> and its <code>abfss://</code> form</li>
+<li><code>az://&lt;container&gt;/&lt;path&gt;</code></li>
+<li><code>adl://&lt;container&gt;/&lt;path&gt;</code></li>
+<li><code>azure://&lt;container&gt;/&lt;path&gt;</code></li>
 </ul>
-<p>If you want more control over your requests, you can configure additional options here as such:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nt">pmtiles</span><span class="p">:</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">allow_http</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">sources</span><span class="p">:</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="nt">tiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">az://my-container/tiles.pmtiles</span>
-</span></code></pre></div>
+<p>Public or presigned individual objects can also use Azure HTTPS endpoints:</p>
+<ul>
+<li><code>https://&lt;account&gt;.dfs.core.windows.net/&lt;container&gt;/&lt;path&gt;</code></li>
+<li><code>https://&lt;account&gt;.blob.core.windows.net/&lt;container&gt;/&lt;path&gt;</code></li>
+<li>the equivalent Microsoft Fabric DFS and Blob endpoints</li>
+</ul>
 <div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>All settings are also available under the <code>azure_</code> prefix.
-This can be useful if you want to have different cloud providers.</p>
+<p class="admonition-title">Provider-specific option names</p>
+<p>Every Azure setting is also available with an <code>azure_</code> prefix.</p>
 </div>
-<h3 id="available-azure-settings">Available azure settings</h3>
+<h4 id="available-microsoft-azure-settings">Available Microsoft Azure settings</h4>
 <h4 id="azure-specific-authentication-credentials">Azure specific Authentication &amp; Credentials</h4>
 <table>
 <thead>
@@ -3005,7 +3260,12 @@ This can be useful if you want to have different cloud providers.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="security-options_3">Security options</h4>
+<!-- cspell:ignore cdef efgh ijkl mnop qrst uvwx yzab myrg myaccount mycontainer myidentity resourcegroups rwdl -->
+
+<h3 id="http-client-settings">HTTP client settings</h3>
+<p>The following security, connection, and proxy settings apply to HTTP(S) and the cloud backends above.</p>
+<h4 id="available-client-settings">Available client settings</h4>
+<h4 id="security-options">Security options</h4>
 <table>
 <thead>
 <tr>
@@ -3017,7 +3277,7 @@ This can be useful if you want to have different cloud providers.</p>
 <tbody>
 <tr>
 <td><code>allow_http</code></td>
-<td>Allow non-TLS, i.e. non-HTTPS connections<br><br><strong>Security warning:</strong><br>If you enable this option, attackers may be able to read the data you request</td>
+<td>Allow non-TLS, i.e. non-HTTPS connections<br><br><strong>Security warning:</strong><br>If you enable this option, attackers may be able to read the data you request<br><br>Defaults to <code>false</code></td>
 <td><code>true</code></td>
 </tr>
 <tr>
@@ -3027,7 +3287,7 @@ This can be useful if you want to have different cloud providers.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="connection-options_3">Connection options</h4>
+<h4 id="connection-options">Connection options</h4>
 <table>
 <thead>
 <tr>
@@ -3051,6 +3311,11 @@ This can be useful if you want to have different cloud providers.</p>
 <td><code>connect_timeout</code></td>
 <td>Timeout for only the connect phase of a Client</td>
 <td><code>5s</code></td>
+</tr>
+<tr>
+<td><code>read_timeout</code></td>
+<td>Timeout for each read operation, reset after every successful read.<br>Useful for detecting stalled connections when the response size is unknown.<br>Disabled by default; timeout errors are retried</td>
+<td><code>30s</code></td>
 </tr>
 <tr>
 <td><code>timeout</code></td>
@@ -3099,7 +3364,7 @@ This can be useful if you want to have different cloud providers.</p>
 </tr>
 </tbody>
 </table>
-<h4 id="proxy-settings_3">Proxy settings</h4>
+<h4 id="proxy-settings">Proxy settings</h4>
 <table>
 <thead>
 <tr>
@@ -3126,9 +3391,13 @@ This can be useful if you want to have different cloud providers.</p>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</div>
+<h3 id="urls-secrets-and-saved-configuration">URLs, secrets, and saved configuration</h3>
+<p>Martin preserves URL query strings on object requests, so presigned and token-authenticated URLs work at runtime.
+When it derives object URLs from a listed prefix, it retains the configured scheme, URL user information, host, custom port, query, and fragment.</p>
+<p>For safety, errors and logs remove URL user information, query strings, and fragments.
+<code>--save-config</code> also removes those URL components, cloud credentials, customer-provided encryption keys, and proxy user information.
+A saved configuration therefore cannot retain a presigned URL token or inline credential; provide the secret again before restarting from the generated file.
+Non-secret object-store settings retain their scalar types in saved configuration.</p>
 
 
   <nav class="md-tags" >
@@ -3173,6 +3442,13 @@ This can be useful if you want to have different cloud providers.</p>
       
       
         <span class="md-tag">google-cloud</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">object-storage</span>
       
     
   </nav>
@@ -3279,7 +3555,7 @@ This can be useful if you want to have different cloud providers.</p>
       
     
     <a href="https://github.com/maplibre/martin" target="_blank" rel="noopener" title="github.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
     </a>
   
 </div>
@@ -3289,20 +3565,27 @@ This can be useful if you want to have different cloud providers.</p>
 </footer>
       
     </div>
-    <div class="md-dialog" data-md-component="dialog">
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
     
     
     
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.action.edit","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","header.autohide","navigation.expand","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.prune","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","toc.follow","toc.integrate"],"search":"../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.action.edit","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","header.autohide","navigation.expand","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.prune","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","toc.follow","toc.integrate"],"redirect":null,"search":"../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7f30b55.min.js"></script>
+      <script src="../assets/javascripts/bundle.d31f0ffa.min.js"></script>
+      
+        <script src="../javascripts/keys.js"></script>
       
     
   </body>

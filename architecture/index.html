@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentation for Martin Tile Server">
+        <meta name="description" content="How the tile server is put together and how it answers requests">
       
       
         <meta name="author" content="Maplibre Contributors">
@@ -15,31 +15,39 @@
         <link rel="canonical" href="https://maplibre.org/martin/architecture/">
       
       
+        <link rel="describedby" href="../llms.txt">
+        
+          <link rel="alternate" type="text/markdown" href="./index.md">
+        
+      
+      
         <link rel="prev" href="../martin-as-a-library/">
       
+      
+        <link rel="next" href="../architecture-sources/">
       
       
         
       
       
       <link rel="icon" href="../images/favicon.ico">
-      <meta name="generator" content="zensical-0.0.50">
+      <meta name="generator" content="zensical-0.1.0">
     
     
       
-        <title>Architecture - Martin Tile Server Documentation</title>
+        <title>Serving - Martin Tile Server Documentation</title>
       
     
     
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.62c9b9cc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.4ab2de0c.min.css">
       
         
           
         
-        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
       
       
   
@@ -129,7 +137,19 @@
 
     
     
-  </head>
+  <meta property="og:type" content="website" />
+<meta property="og:title" content="Serving - Martin Tile Server Documentation" />
+<meta property="og:description" content="How the tile server is put together and how it answers requests" />
+<meta property="og:image" content="https://maplibre.org/martin/assets/images/social/architecture.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://maplibre.org/martin/architecture/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Serving - Martin Tile Server Documentation" />
+<meta property="twitter:description" content="How the tile server is put together and how it answers requests" />
+<meta property="twitter:image" content="https://maplibre.org/martin/assets/images/social/architecture.png" />
+</head>
   
   
     
@@ -144,14 +164,11 @@
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#architecture" class="md-skip">
-          Skip to content
-        </a>
-      
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
     </div>
     <div data-md-component="announce">
       
@@ -166,13 +183,13 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="./.." title="Martin Tile Server Documentation" class="md-header__button md-logo" aria-label="Martin Tile Server Documentation" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  <img src="../images/logo.svg" alt="Martin Tile Server Documentation">
 
     </a>
-    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+    <label class="md-header__button md-icon" for="__drawer">
       
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -184,7 +201,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture
+              Serving
             
           </span>
         </div>
@@ -234,9 +251,10 @@
     
       
       
-        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+        <label class="md-header__button md-icon" for="__search">
           
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Search</span>
         </label>
         <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
   <button type="button" class="md-search__button">
@@ -250,7 +268,7 @@
         <a href="https://github.com/maplibre/martin" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -271,31 +289,11 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="./.." class="md-tabs__link">
-        
-  
-  Introduction
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
       
       
         
           
-        
-      
-        
-      
         
       
         
@@ -307,10 +305,10 @@
     
     
       <li class="md-tabs__item">
-        <a href="../quick-start/" class="md-tabs__link">
+        <a href="./.." class="md-tabs__link">
           
   
-  Quick Start
+  Getting Started
 
         </a>
       </li>
@@ -323,18 +321,22 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../installation/" class="md-tabs__link">
-        
-  
-  Installation
-
-      </a>
-    </li>
-  
-
+    
+      
       
         
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      
   
   
   
@@ -344,10 +346,6 @@
       
         
           
-        
-      
-        
-      
         
       
         
@@ -364,59 +362,14 @@
         <a href="../run/" class="md-tabs__link">
           
   
-  Running
+  Usage
 
         </a>
       </li>
     
   
 
-      
-        
-  
-  
-  
-  
     
-      
-      
-        
-          
-        
-      
-        
-      
-        
-      
-    
-    
-    
-    
-      <li class="md-tabs__item">
-        <a href="../config-file/" class="md-tabs__link">
-          
-  
-  Configuration File
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../using/" class="md-tabs__link">
-        
-  
-  Available API Endpoints
-
-      </a>
-    </li>
   
 
       
@@ -494,6 +447,34 @@
   
 
       
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../migration-guide/" class="md-tabs__link">
+          
+  
+  Releases
+
+        </a>
+      </li>
+    
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -526,8 +507,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="./.." title="Martin Tile Server Documentation" class="md-nav__button md-logo" aria-label="Martin Tile Server Documentation" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+  <img src="../images/logo.svg" alt="Martin Tile Server Documentation">
 
     </a>
     Martin Tile Server Documentation
@@ -537,7 +517,7 @@
       <a href="https://github.com/maplibre/martin" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -553,43 +533,11 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="./.." class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Introduction
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
       
         
           
-        
-      
-        
-      
         
       
         
@@ -616,16 +564,17 @@
   
   
   
-    <a href="../quick-start/" class="md-nav__link">
+  
+    <a href="./.." class="md-nav__link">
       
   
   
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
   
   <span class="md-ellipsis">
     
   
-  Martin Quick Start Guide
+  Getting Started
 
     
   </span>
@@ -649,42 +598,8 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Installation
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
-      
-        
-          
-        
-      
-        
       
         
       
@@ -714,11 +629,15 @@
   
   
   
+  
+    
+  
+  
+  
+  
     <a href="../run/" class="md-nav__link">
       
   
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 16.5v-9l6 4.5M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>
   
   <span class="md-ellipsis">
     
@@ -736,99 +655,9 @@
     </a>
   
 
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    <a href="../config-file/" class="md-nav__link">
-      
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2c-1.11 0-2 .89-2 2v16a2 2 0 0 0 2 2h6.68a7 7 0 0 1-.68-3 7 7 0 0 1 7-7 7 7 0 0 1 1 .08V8l-6-6zm7 1.5L18.5 9H13zM18 14a.26.26 0 0 0-.26.21l-.19 1.32c-.3.13-.59.29-.85.47l-1.24-.5c-.11 0-.24 0-.31.13l-1 1.73c-.06.11-.04.24.06.32l1.06.82a4.2 4.2 0 0 0 0 1l-1.06.82a.26.26 0 0 0-.06.32l1 1.73c.06.13.19.13.31.13l1.24-.5c.26.18.54.35.85.47l.19 1.32c.02.12.12.21.26.21h2c.11 0 .22-.09.24-.21l.19-1.32c.3-.13.57-.29.84-.47l1.23.5c.13 0 .26 0 .33-.13l1-1.73a.26.26 0 0 0-.06-.32l-1.07-.82c.02-.17.04-.33.04-.5s-.01-.33-.04-.5l1.06-.82a.26.26 0 0 0 .06-.32l-1-1.73c-.06-.13-.19-.13-.32-.13l-1.23.5c-.27-.18-.54-.35-.85-.47l-.19-1.32A.236.236 0 0 0 20 14zm1 3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5c-.84 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Configuration
-
-    
-  </span>
-  
   
 
       
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../using/" class="md-nav__link">
-        
-  
-  
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 7H5a2 2 0 0 0-2 2v8h2v-4h2v4h2V9a2 2 0 0 0-2-2m0 4H5V9h2m7-2h-4v10h2v-4h2a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2m0 4h-2V9h2m6 0v6h1v2h-4v-2h1V9h-1V7h4v2Z"/></svg>
-  
-  <span class="md-ellipsis">
-    
-  
-  Available API Endpoints
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -871,6 +700,7 @@
     <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
       
         
+  
   
   
   
@@ -942,7 +772,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -965,26 +795,27 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_8">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
   
   Development
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+              
+                
+                  
   
   
   
@@ -1010,10 +841,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1039,10 +870,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1068,10 +899,76 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Architecture
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_4_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Architecture
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
   
   
     
@@ -1095,7 +992,7 @@
   <span class="md-ellipsis">
     
   
-  Architecture
+  Serving
 
     
   </span>
@@ -1114,7 +1011,7 @@
   <span class="md-ellipsis">
     
   
-  Architecture
+  Serving
 
     
   </span>
@@ -1151,10 +1048,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#core-components" class="md-nav__link">
+  <a href="#crates" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Core Components
+        Crates
       </span>
     </span>
   </a>
@@ -1162,10 +1059,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
+  <a href="#requests-and-startup" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Data Flow
+        Requests and startup
       </span>
     </span>
   </a>
@@ -1173,10 +1070,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-design-decisions" class="md-nav__link">
+  <a href="#deployment" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Key Design Decisions
+        Deployment
       </span>
     </span>
   </a>
@@ -1184,10 +1081,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#component-interactions" class="md-nav__link">
+  <a href="#performance" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Component Interactions
+        Performance
       </span>
     </span>
   </a>
@@ -1195,10 +1092,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment-patterns" class="md-nav__link">
+  <a href="#security" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Deployment Patterns
+        Security
       </span>
     </span>
   </a>
@@ -1206,10 +1103,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-characteristics" class="md-nav__link">
+  <a href="#extending-martin" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Performance Characteristics
+        Extending Martin
       </span>
     </span>
   </a>
@@ -1217,43 +1114,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-considerations" class="md-nav__link">
+  <a href="#monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Security considerations
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#extensibility-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Extensibility Points
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operations-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Operations considerations
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        Related Documentation
+        Monitoring
       </span>
     </span>
   </a>
@@ -1267,10 +1131,137 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-sources/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4-3.58 4-8 4-8-1.79-8-4m8.08 11H12c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.29a7.4 7.4 0 0 1-.29-2c0-.34.03-.67.08-1M20 12.08V9c0 2.21-3.58 4-8 4s-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.69c1.13-2.37 3.53-4 6.31-4 .34 0 .67.03 1 .08m3.8 8.32c.1 0 .1.1 0 .2l-1 1.7c-.1.1-.2.1-.3.1l-1.2-.4c-.3.2-.5.3-.8.5l-.2 1.3c0 .1-.1.2-.2.2h-2c-.1 0-.2-.1-.3-.2l-.2-1.3c-.3-.1-.6-.3-.8-.5l-1.2.5c-.1 0-.2 0-.3-.1l-1-1.7c-.1-.1 0-.2.1-.3l1.1-.8v-1l-1.1-.8c-.1-.1-.1-.2-.1-.3l1-1.7c.1-.1.2-.1.3-.1l1.2.5c.3-.2.5-.3.8-.5l.2-1.3c0-.1.1-.2.3-.2h2c.1 0 .2.1.2.2l.2 1.3c.3.1.6.3.9.5l1.2-.5c.1 0 .3 0 .3.1l1 1.7c.1.1 0 .2-.1.3l-1.1.8v1zM20.5 19c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5.7 1.5 1.5 1.5 1.5-.7 1.5-1.5"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Sources
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-generate/" class="md-nav__link">
+        
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 2v6h2v3H5c-1.11 0-2 .89-2 2v3H1v6h6v-6H5v-3h6v3H9v6h6v-6h-2v-3h6v3h-2v6h6v-6h-2v-3c0-1.11-.89-2-2-2h-6V8h2V2z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Generation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+  
+    <a href="../migration-guide/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Releases
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
       
     </li>
   
@@ -1291,27 +1282,9 @@
 
 
 
-  
-
 
   <nav class="md-path" aria-label="Navigation" >
     <ol class="md-path__list">
-      
-        
-  
-  
-    <li class="md-path__item">
-      <a href="./.." class="md-path__link">
-        
-  
-  <span class="md-ellipsis">
-    Introduction
-  </span>
-
-      </a>
-    </li>
-  
-
       
       
         
@@ -1350,13 +1323,45 @@
   
 
       
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="././" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
     </ol>
   </nav>
 
               
               <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
                 
                   
+
   
     <a href="https://github.com/maplibre/martin/edit/main/docs/content/architecture.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
@@ -1366,8 +1371,11 @@
   
 
 
-<h1 id="architecture">Architecture</h1>
-<p>This document provides a high-level overview of Martin's architecture, describing its major components, how they interact, and the rationale behind key design decisions.</p>
+<h1 id="serving-architecture">Serving Architecture</h1>
+<p>How the Martin tile server is put together and how it answers requests.
+<a href="../architecture-sources/">Source Architecture</a> covers how each kind of source works and how sources reload at runtime,
+and <a href="../architecture-generate/">Generation Architecture</a> covers the bulk mode of <code>martin cp</code> and how the server renders
+table sources with <code>layers</code>.</p>
 <h2 id="overview">Overview</h2>
 <p>Martin is a blazing fast tile server written in Rust that generates and serves vector tiles on the fly from multiple data sources.
 It is designed to handle heavy traffic and optimize for speed while maintaining a clean separation of concerns.</p>
@@ -1383,6 +1391,7 @@ It is designed to handle heavy traffic and optimize for speed while maintaining 
             MBT[MBTiles Files]
             PMT[PMTiles Files&lt;br/&gt;Local &amp; Remote]
             COG[Cloud Optimized&lt;br/&gt;GeoTIFF]
+            DuckDB[DuckDB / GeoParquet]
         end
 
         subgraph Resources["Supporting Resources"]
@@ -1391,14 +1400,16 @@ It is designed to handle heavy traffic and optimize for speed while maintaining 
             Styles[MapLibre Styles&lt;br/&gt;JSON]
         end
 
+        Engine[Tile generation&lt;br/&gt;martin-tilegen]
         Catalog[Tile Catalog&lt;br/&gt;Source Registry]
         Cache[Tile/Resources Cache&lt;br/&gt;Moka]
     end
 
     subgraph Storage["Data Storage"]
         DB[(PostgreSQL&lt;br/&gt;PostGIS)]
-        Files[File System&lt;br/&gt;MBTiles/PMTiles]
+        Files[File System&lt;br/&gt;MBTiles/PMTiles/GeoParquet]
         S3[Object Storage&lt;br/&gt;S3/Azure/GCP]
+        HTTP[HTTP&lt;br/&gt;GeoParquet]
     end
 
     Client --&gt;|HTTP Requests| Server
@@ -1408,20 +1419,22 @@ It is designed to handle heavy traffic and optimize for speed while maintaining 
     Server --&gt; Cache
 
     PG --&gt; DB
+    PG --&gt;|tables with layers| Engine
     MBT --&gt; Files
     PMT --&gt; Files
     PMT --&gt; S3
     COG --&gt; Files
     COG --&gt; S3
+    DuckDB --&gt; Files
+    DuckDB --&gt; HTTP
 
     Cache -.-&gt;|Cached Tiles/Resources| Client</code></pre>
-<h2 id="core-components">Core Components</h2>
-<p>Martin's architecture is organized into four main Rust crates, each with distinct responsibilities:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">martin (Martin Server)</label><label for="__tabbed_1_2">martin-core (Library)</label><label for="__tabbed_1_3">mbtiles (Library and CLI)</label><label for="__tabbed_1_4">martin-tile-utils</label></div>
+<h2 id="crates">Crates</h2>
+<p>Martin's architecture is organized into six main Rust crates, each with distinct responsibilities:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:6"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><input id="__tabbed_1_6" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">martin</label><label for="__tabbed_1_2">martin-core</label><label for="__tabbed_1_3">mbtiles</label><label for="__tabbed_1_4">martin-tile-utils</label><label for="__tabbed_1_5">martin-tilegen</label><label for="__tabbed_1_6">map-tile-toolkit</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><strong>Purpose</strong>: The main tile server binary and HTTP service layer.</p>
-<p><strong>Location</strong>: <code>/martin</code></p>
 <p><strong>Key Responsibilities</strong>:</p>
 <ul>
 <li>HTTP server using Actix-Web framework</li>
@@ -1431,51 +1444,22 @@ It is designed to handle heavy traffic and optimize for speed while maintaining 
 <li>Runtime source reloading (filesystem watch / polling) without a restart</li>
 <li>Serving the Web UI for tile inspection</li>
 </ul>
-<p><strong>Main Modules</strong>:</p>
-<ul>
-<li><code>src/bin/martin.rs</code> - Server entry point</li>
-<li><code>src/bin/martin-cp.rs</code> - Bulk tile copying tool</li>
-<li><code>src/srv/</code> - HTTP service handlers</li>
-<li><code>server.rs</code> - Main server setup and routing</li>
-<li><code>tiles/</code> - Tile serving endpoints</li>
-<li><code>fonts.rs</code> - Font glyph serving</li>
-<li><code>sprites.rs</code> - Sprite serving</li>
-<li><code>styles.rs</code> - Style serving</li>
-<li><code>src/config/</code> - Configuration management</li>
-<li><code>args/</code> - CLI argument parsing</li>
-<li><code>file/</code> - Config file parsing</li>
-<li><code>martin-ui/</code> - React-based web interface</li>
-</ul>
 </div>
 <div class="tabbed-block">
 <p><strong>Purpose</strong>: Core abstractions and implementations for tile sources and supporting resources.</p>
-<p><strong>Location</strong>: <code>/martin-core</code></p>
 <p><strong>Key Responsibilities</strong>:</p>
 <ul>
 <li>Abstract tile source traits and implementations</li>
 <li>PostgreSQL connection pooling and query execution</li>
 <li>MBTiles and PMTiles reading</li>
 <li>Cloud Optimized GeoTIFF (COG) tile extraction</li>
+<li>DuckDB / GeoParquet tile generation</li>
 <li>Sprite, font, and style resource generation</li>
 <li>Tile format handling (MVT protocol buffers)</li>
-</ul>
-<p><strong>Main Modules</strong>:</p>
-<ul>
-<li><code>src/tiles/</code> - Tile source implementations</li>
-<li><code>postgres/</code> - PostGIS table and function sources</li>
-<li><code>mbtiles/</code> - MBTiles file source</li>
-<li><code>pmtiles/</code> - PMTiles file source</li>
-<li><code>cog/</code> - Cloud Optimized GeoTIFF source</li>
-<li><code>catalog.rs</code> - Source registry and management</li>
-<li><code>src/resources/</code> - Supporting resources</li>
-<li><code>sprites/</code> - SVG sprite generation</li>
-<li><code>fonts/</code> - Font glyph generation</li>
-<li><code>styles/</code> - MapLibre style handling</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <p><strong>Purpose</strong>: MBTiles format support and manipulation tools.</p>
-<p><strong>Location</strong>: <code>/mbtiles</code></p>
 <p><strong>Key Responsibilities</strong>:</p>
 <ul>
 <li>SQLite-based MBTiles reading and writing</li>
@@ -1485,16 +1469,9 @@ It is designed to handle heavy traffic and optimize for speed while maintaining 
 <li>Diff/patch operations between MBTiles files</li>
 <li>Schema management</li>
 </ul>
-<p><strong>Main Modules</strong>:</p>
-<ul>
-<li><code>src/lib.rs</code> - Core MBTiles library</li>
-<li><code>src/bin/mbtiles.rs</code> - CLI tool</li>
-<li><code>sql/</code> - SQL schema and migrations</li>
-</ul>
 </div>
 <div class="tabbed-block">
 <p><strong>Purpose</strong>: Low-level tile manipulation and conversion utilities.</p>
-<p><strong>Location</strong>: <code>/martin-tile-utils</code></p>
 <p><strong>Key Responsibilities</strong>:</p>
 <ul>
 <li>Tile coordinate system conversions</li>
@@ -1503,10 +1480,33 @@ It is designed to handle heavy traffic and optimize for speed while maintaining 
 <li>Bounding box calculations</li>
 </ul>
 </div>
+<div class="tabbed-block">
+<p><strong>Purpose</strong>: The tile generation engine behind the bulk mode of <code>martin cp</code> and PostgreSQL table
+sources with <code>layers</code>. It turns features into tiles inside Martin, using the tile generation method
+adapted from <a href="https://github.com/onthegomap/planetiler">Planetiler</a>.</p>
+<p><strong>Key Responsibilities</strong>:</p>
+<ul>
+<li>Compiling layers and their CEL expressions into a plan</li>
+<li>Rendering every feature at every zoom into tile pieces</li>
+<li>Sorting the pieces on disk by tile, and merging them back</li>
+<li>Encoding tiles in parallel and writing them in archive order</li>
+<li>Rendering a requested tile, or its prefetch block, in memory for the tile server</li>
+</ul>
+<p>See <a href="../architecture-generate/">Generation Architecture</a>.</p>
+</div>
+<div class="tabbed-block">
+<p><strong>Purpose</strong>: Clipping integer geometries into per-tile pieces on a tile grid, used by <code>martin-tilegen</code>.</p>
+<p><strong>Key Responsibilities</strong>:</p>
+<ul>
+<li>Slicing lines, points and polygons into the tiles they touch, keeping original vertices</li>
+<li>Valid polygon pieces with synthetic edges along the tile buffer</li>
+<li>Reassembling pieces from neighboring tiles into whole geometries</li>
+</ul>
 </div>
 </div>
-<h2 id="data-flow">Data Flow</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Tile Request Flows</label><label for="__tabbed_2_2">Configuration and Initialization Flow</label><label for="__tabbed_2_3">Resource Generation Flow</label></div>
+</div>
+<h2 id="requests-and-startup">Requests and startup</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Tile requests</label><label for="__tabbed_2_2">Startup</label><label for="__tabbed_2_3">Sprites and fonts</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <pre class="mermaid"><code>sequenceDiagram
@@ -1534,6 +1534,15 @@ It is designed to handle heavy traffic and optimize for speed while maintaining 
         Server-&gt;&gt;Server: Postprocess (MLT, compress)
         Server-&gt;&gt;Cache: Store postprocessed tile
         Server--&gt;&gt;Client: 200 OK (tile data)
+    else Tile not in cache, source prefetches blocks
+        Server-&gt;&gt;Source: Get block holding (z, x, y)
+        Source-&gt;&gt;DB: Query features of the block
+        DB--&gt;&gt;Source: Features
+        Source-&gt;&gt;Source: Render every tile of the block
+        Source--&gt;&gt;Server: Tiles of the block
+        Server-&gt;&gt;Server: Postprocess each tile
+        Server-&gt;&gt;Cache: Store every postprocessed tile
+        Server--&gt;&gt;Client: 200 OK (tile data)
     end</code></pre>
 </div>
 <div class="tabbed-block">
@@ -1558,6 +1567,13 @@ It is designed to handle heavy traffic and optimize for speed while maintaining 
         Discovery-&gt;&gt;Discovery: Scan MBTiles files
         Discovery-&gt;&gt;Discovery: Scan PMTiles files
         Discovery-&gt;&gt;Sources: Register file sources
+    end
+
+    alt DuckDB Sources
+        Discovery-&gt;&gt;Discovery: Read duckdb.sources from config
+        Discovery-&gt;&gt;Discovery: Introspect GeoParquet metadata
+        Discovery-&gt;&gt;Discovery: Discover database tables &amp; macros
+        Discovery-&gt;&gt;Sources: Register DuckDB sources
     end
 
     Sources--&gt;&gt;Server: Source catalog
@@ -1592,284 +1608,9 @@ It is designed to handle heavy traffic and optimize for speed while maintaining 
 </div>
 </div>
 </div>
-<h2 id="key-design-decisions">Key Design Decisions</h2>
-<p>🧠 This section provides <strong>background and context</strong>, not required knowledge.
-You don't need to understand or remember all of this to use or contribute to Martin.
-Read it when you're curious <strong>why</strong> certain choices were made.</p>
-<details>
-<summary>Why Rust</summary>
-<p>Martin is written in Rust to balance high performance with strong safety guarantees.</p>
-<ul>
-<li>Near-C performance without manual memory management</li>
-<li>Memory safety (no null pointers or buffer overflows)</li>
-<li>Safe concurrency without data races</li>
-<li>Zero-cost abstractions that compile to efficient code</li>
-</ul>
-</details>
-<details>
-<summary>Actix-Web as the chosen web framework</summary>
-<p>It offers a fast, production-ready async HTTP stack.</p>
-<ul>
-<li>High-performance async request handling</li>
-<li>Mature middleware ecosystem</li>
-<li>Built-in compression and caching headers</li>
-<li>Easy Prometheus metrics integration</li>
-</ul>
-</details>
-<details>
-<summary>Async-first architecture</summary>
-<p>Allows Martin to handle many concurrent requests efficiently.</p>
-<ul>
-<li>Handles hundreds of thousdands of concurrent connections</li>
-<li>Avoids blocking database queries</li>
-<li>Enables efficient file and network I/O</li>
-<li>Keeps thread usage low under load</li>
-</ul>
-</details>
-<details>
-<summary>Specific crates splitting</summary>
-<p>The codebase is split into crates with clear responsibilities</p>
-<ul>
-<li><strong>martin-core</strong> - reusable core logic and tile sources</li>
-<li><strong>mbtiles</strong> - standalone MBTiles tooling</li>
-<li><strong>martin</strong> - HTTP server, configuration, and runtime wiring</li>
-<li><strong>martin-tile-utils</strong> - shared low-level tile utilities</li>
-</ul>
-<p>This makes it easier to:</p>
-<ul>
-<li>Embed Martin as a library in other Rust projects</li>
-<li>Use MBTiles tools independently</li>
-<li>Maintain clear API boundaries and versioning</li>
-</ul>
-</details>
-<details>
-<summary>Why connection pooling</summary>
-<p>Reuse database connections instead of reconnecting per request</p>
-<ul>
-<li>Uses <code>deadpool-postgres</code></li>
-<li>Avoids per-request connection overhead</li>
-<li>Configurable pool sizing</li>
-<li>Automatic connection health checks</li>
-</ul>
-</details>
-<details>
-<summary>In-Memory Tile Caching</summary>
-<p>Avoid regenerating frequently requested tiles.</p>
-<ul>
-<li>Fast LRU cache with optional TTLs</li>
-<li>Automatic eviction of least-used entries</li>
-<li>Configurable memory limits (default: 512 MB)</li>
-<li>Thread-safe concurrent access</li>
-<li>Significant performance improvements for repeated requests</li>
-</ul>
-</details>
-<details>
-<summary>Automatic Source Discovery</summary>
-<p>Martin tries to work out of the box with minimal configuration.
-It can currently automatically detect:</p>
-<ul>
-<li>PostgreSQL tables with geometry columns</li>
-<li>PostgreSQL functions that return MVT</li>
-<li>MBTiles and PMTiles files in configured directories</li>
-</ul>
-<p>This keeps common setups close to zero-config.</p>
-</details>
-<details>
-<summary>Multi-Protocol Tile Support</summary>
-<p>Different workloads benefit from different storage models.
-This lets operators pick the best format for their use case:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">PostgreSQL</label><label for="__tabbed_3_2">MBTiles</label><label for="__tabbed_3_3">PMTiles</label><label for="__tabbed_3_4">COG</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p>Dynamic tiles generated from live data.
-  Best for frequently changing datasets.</p>
-</div>
-<div class="tabbed-block">
-<p>Pre-generated tile archives.
-Simple and fast for static datasets.</p>
-</div>
-<div class="tabbed-block">
-<p>Single-file, cloud-native archives optimized for HTTP range requests.</p>
-</div>
-<div class="tabbed-block">
-<p>Direct tile serving from Cloud Optimized GeoTIFFs.</p>
-</div>
-</div>
-</div>
-</details>
-<details>
-<summary>Why generate resources (sprites, fonts) dynamically</summary>
-<p>Sprites, fonts, and styles are created on demand.</p>
-<ul>
-<li>No pre-processing step required</li>
-<li>Simpler deployments (just provide source files)</li>
-<li>URL-based customization</li>
-<li>Less storage overhead</li>
-</ul>
-</details>
-<details>
-<summary>Why layered configuration</summary>
-<p>Martin supports multiple configuration sources.</p>
-<ul>
-<li>CLI flags for quick testing and overrides</li>
-<li>Environment variables for containerized deployments</li>
-<li>Config files for larger or more complex setups</li>
-<li>Clear precedence between configuration layers</li>
-</ul>
-</details>
-<h2 id="component-interactions">Component Interactions</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">PosgtgreSQL Integration</label><label for="__tabbed_4_2">File Source Integration</label><label for="__tabbed_4_3">GeoJSON Integration</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<pre class="mermaid"><code>graph TB
-    Martin[Martin Server]
-    Pool[Connection Pool&lt;br/&gt;deadpool-postgres]
-
-    subgraph PostgreSQL
-        Tables[Tables with&lt;br/&gt;Geometry Columns]
-        Functions[MVT Functions]
-        PostGIS[PostGIS Extension]
-    end
-
-    Martin --&gt; Pool
-    Pool --&gt; Tables
-    Pool --&gt; Functions
-    Tables --&gt; PostGIS
-    Functions --&gt; PostGIS</code></pre>
-<p><strong>How it works</strong>:</p>
-<ol>
-<li>Martin connects to PostgreSQL using connection string</li>
-<li>Queries <code>geometry_columns</code> view to discover tables</li>
-<li>Queries <code>pg_proc</code> to discover MVT-returning functions</li>
-<li>Maintains connection pool for efficient query execution</li>
-<li>Generates tile SQL queries with bbox parameters</li>
-<li>Returns results as MVT tiles</li>
-</ol>
-</div>
-<div class="tabbed-block">
-<pre class="mermaid"><code>graph TB
-    Martin[Martin Server]
-
-    subgraph "Local Files"
-        MBT[MBTiles&lt;br/&gt;SQLite]
-        PMT[PMTiles&lt;br/&gt;Binary Format]
-        COG[GeoTIFF&lt;br/&gt;Cloud Optimized]
-    end
-
-    subgraph "Remote Files"
-        S3MBT[S3/Azure/GCP&lt;br/&gt;MBTiles]
-        S3PMT[S3/Azure/GCP&lt;br/&gt;PMTiles]
-        S3COG[S3/Azure/GCP&lt;br/&gt;GeoTIFF]
-    end
-
-    Martin --&gt; MBT
-    Martin --&gt; PMT
-    Martin --&gt; COG
-    Martin --&gt; S3MBT
-    Martin --&gt; S3PMT
-    Martin --&gt; S3COG</code></pre>
-<p><strong>How it works</strong>:</p>
-<ol>
-<li>Martin scans configured directories for tile files</li>
-<li>Opens MBTiles with SQLite (using <code>sqlx</code>)</li>
-<li>Opens PMTiles with custom parser (HTTP range requests for remote)</li>
-<li>Opens COG with TIFF parser (HTTP range requests for remote)</li>
-<li>Uses <code>object_store</code> crate for S3/Azure/GCP access</li>
-<li>Serves tiles directly from file format</li>
-</ol>
-</div>
-<div class="tabbed-block">
-<p>Unlike the other file sources, GeoJSON files hold raw geometry rather than pre-baked tiles.
-Martin loads the whole file once, reprojects and indexes it in memory, then clips and encodes an MVT tile on every request.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Load["Load time (once per source)"]
-        File[".geojson / .json file"]
-        Parse["Parse (geojson crate)&lt;br/&gt;-&gt; geo_types::Geometry"]
-        Reproject["Reproject WGS84 -&gt; WebMercator"]
-        RTree["Packed Hilbert R-tree&lt;br/&gt;(geo_index)"]
-    end
-
-    subgraph Request["Per tile request"]
-        Rect["Tile Rect + buffer&lt;br/&gt;(WebMercator bbox)"]
-        Query["R-tree candidate lookup"]
-        Clip["Parallel clip + transform&lt;br/&gt;(geo, rayon)"]
-        Encode["MVT encode&lt;br/&gt;(fast-mvt)"]
-    end
-
-    File --&gt; Parse --&gt; Reproject --&gt; RTree
-    RTree -.-&gt;|in-memory features| Query
-    Rect --&gt; Query --&gt; Clip --&gt; Encode</code></pre>
-<p><strong>Load time</strong> (<code>GeoJsonSource::new</code> in <code>martin-core/src/tiles/geojson/</code>):</p>
-<ol>
-<li>The entire file is read into memory and parsed with the <code>geojson</code> crate; each feature's geometry becomes a <code>geo_types::Geometry&lt;f64&gt;</code>.</li>
-<li>Every geometry is reprojected once from WGS84 to Web Mercator, so all per-tile work stays in Mercator.</li>
-<li>A packed Hilbert R-tree (<code>geo_index</code>) is built over the feature bounding boxes for fast spatial lookup, and the union of all boxes becomes the TileJSON <code>bounds</code>.</li>
-<li>Features (Mercator geometry + JSON properties) are held in memory for the lifetime of the source.</li>
-</ol>
-<p><strong>Per request</strong> (<code>GeoJsonSource::get_tile</code>):</p>
-<ol>
-<li>The requested <code>z/x/y</code> is converted to a Web Mercator tile <code>Rect</code>, grown outward by the configurable <code>buffer</code> (as a <code>buffer / extent</code> fraction) so geometry near the edge survives clipping.</li>
-<li>The R-tree is queried for candidate features overlapping the buffered rect; no candidates yields an empty tile (<code>204 No Content</code>).</li>
-<li>Candidates are clipped in parallel (<code>rayon</code>): polygons via boolean intersection, lines via line-clip, points via containment - then snapped, repaired, re-oriented, and transformed into the tile's integer coordinate grid (<code>extent</code> units, y flipped for MVT).</li>
-<li>Surviving features are encoded into a single MVT layer named after the source id (<code>fast-mvt</code>); properties are mapped to MVT values (JSON arrays/objects serialized to strings, nulls dropped).</li>
-<li>The tile is returned uncompressed as <code>application/x-protobuf</code>; the shared server layer then handles caching, ETag/<code>304</code>, and <code>Content-Encoding</code>, identically to every other source.</li>
-</ol>
-<p><strong>Configuration</strong> (<code>GeoJsonConfig</code>, both <code>.json</code> and <code>.geojson</code> extensions are discovered):</p>
-<ul>
-<li><code>extent</code> (default <code>4096</code>) - side length of the MVT integer coordinate grid a tile is encoded into.
-  A <code>NonZeroU32</code>, so <code>0</code> is rejected at parse time.</li>
-<li><code>buffer</code> (default <code>64</code>, in tile units) - margin of geometry kept around each tile edge to avoid seams between neighbouring tiles.</li>
-</ul>
-<p>Hot-reload uses the same generic Reload Driver as the other file sources (see below), watching the configured directories for added, changed, or removed <code>.geojson</code>/<code>.json</code> files.</p>
-</div>
-</div>
-</div>
-<p>== Runtime Source Reloading</p>
-<div class="language-text highlight"><pre><span></span><code>After startup, Martin keeps the catalog in sync with its sources without a restart.
-One generic loop - the **Reload Driver** - sits behind three traits, so every source kind reuses the same loop and only the kind-specific parts vary.
-
-```mermaid
-graph LR
-    Trigger[&quot;Trigger&lt;br/&gt;(when)&quot;] --&gt;|fires| Driver[Reload Driver]
-    Driver --&gt;|discover| Discovery[&quot;Discovery&lt;br/&gt;(what should exist)&quot;]
-    Discovery --&gt;|&quot;(Version, Args) per id&quot;| Driver
-    Driver --&gt;|&quot;diff vs baseline, build changed&quot;| Advisory[&quot;ReloadAdvisory&lt;br/&gt;add / update / remove&quot;]
-    Advisory --&gt;|apply| Sink[&quot;Sink&lt;br/&gt;(where)&quot;]
-    Sink --&gt; Catalog[(&quot;Catalog&lt;br/&gt;TileSourceManager&quot;)]
-```
-
-The traits are:
-
-- **`Discovery`** - the cheap **&quot;what should exist now&quot;** read (a directory scan or object-store listing).
-  Returns one `(Version, Args)` per source id.
-  `Version` is a `u128` change token (e.g. mtime millis); a changed value triggers an in-place update.
-  `Args` is the kind-specific payload used to build the source on demand.
-- **`Trigger`** - decides **when to reconcile**.
-  `NotifyTrigger` fires on filesystem events; `PollTrigger` fires on a fixed interval.
-- **`Sink`** - where the diff is **applied**.
-  `TileSourceManager`, which holds the live catalog, implements it directly via `apply_changes`.
-
-They interact in this loop:
-
-1. **Seed**.
-   Run Discovery once to record a baseline, applying nothing.
-   The catalog was already populated during initialization, so applying would double-add.
-2. **Reconcile**.
-   On each Trigger, re-run Discovery.
-   Diff the new `Version`s against the baseline into a `ReloadAdvisory`.
-   Build only the changed ids.
-   Apply through the Sink.
-3. **Commit / retain**.
-   Advance the baseline only on a successful apply.
-   A failed discovery or apply keeps the old baseline so the next Trigger retries the same delta, and the catalog never flaps.
-
-Each kind has at least one Reload Driver instance.
-Adding reload support for a new kind means writing one `Discovery` adapter.
-The loop, triggers, and sink are reused.
-</code></pre></div>
-<h2 id="deployment-patterns">Deployment Patterns</h2>
+<h2 id="deployment">Deployment</h2>
 <p>Martin supports multiple deployment patterns:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:4"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><input id="__tabbed_5_4" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Standalone Server</label><label for="__tabbed_5_2">Container Deployment</label><label for="__tabbed_5_3">Serverless (AWS Lambda)</label><label for="__tabbed_5_4">Behind Reverse Proxy</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Standalone</label><label for="__tabbed_3_2">Containers</label><label for="__tabbed_3_3">AWS Lambda</label><label for="__tabbed_3_4">Reverse proxy</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <ul>
@@ -1905,8 +1646,8 @@ The loop, triggers, and sink are reused.
 </div>
 </div>
 </div>
-<h2 id="performance-characteristics">Performance Characteristics</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="6:4"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><input id="__tabbed_6_4" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">PostgreSQL Queries</label><label for="__tabbed_6_2">Tile Encoding</label><label for="__tabbed_6_3">Network (I/O)</label><label for="__tabbed_6_4">Memory</label></div>
+<h2 id="performance">Performance</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:4"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><input id="__tabbed_4_4" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">PostgreSQL queries</label><label for="__tabbed_4_2">Tile encoding</label><label for="__tabbed_4_3">Network</label><label for="__tabbed_4_4">Memory</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <ul>
@@ -1936,7 +1677,7 @@ The loop, triggers, and sink are reused.
 </div>
 <!-- New Tab Group -->
 
-<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Vertical Scaling</label><label for="__tabbed_7_2">Horizontal Scaling</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Vertical scaling</label><label for="__tabbed_5_2">Horizontal scaling</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <ul>
@@ -1955,8 +1696,8 @@ The loop, triggers, and sink are reused.
 </div>
 </div>
 </div>
-<h2 id="security-considerations">Security considerations</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="8:3"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><input id="__tabbed_8_3" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Input Validation</label><label for="__tabbed_8_2">Database Access</label><label for="__tabbed_8_3">Network Security</label></div>
+<h2 id="security">Security</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:3"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Input validation</label><label for="__tabbed_6_2">Database access</label><label for="__tabbed_6_3">Network security</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <ul>
@@ -1984,8 +1725,8 @@ The loop, triggers, and sink are reused.
 </div>
 </div>
 </div>
-<h2 id="extensibility-points">Extensibility Points</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="9:3"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><input id="__tabbed_9_3" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Adding New Tile Sources</label><label for="__tabbed_9_2">Adding New Resource Types</label><label for="__tabbed_9_3">Custom Authentication/Authorization</label></div>
+<h2 id="extending-martin">Extending Martin</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:3"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><input id="__tabbed_7_3" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">A new tile source</label><label for="__tabbed_7_2">A new resource type</label><label for="__tabbed_7_3">Authentication</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>To add a new tile source type:</p>
@@ -1997,7 +1738,6 @@ The loop, triggers, and sink are reused.
 </ol>
 <p>Example source types that could be added:</p>
 <ul>
-<li>Direct GeoJSON file serving</li>
 <li>Vector tile rendering from raster data</li>
 <li>Integration with other spatial databases</li>
 </ul>
@@ -2006,7 +1746,7 @@ The loop, triggers, and sink are reused.
 <p>To add new resource endpoints:</p>
 <ol>
 <li>Implement resource generator in <code>martin-core</code></li>
-<li>Add HTTP handler in <code>martin/src/srv/</code></li>
+<li>Add an HTTP handler in <code>martin</code></li>
 <li>Add configuration support</li>
 <li>Update catalog/discovery</li>
 </ol>
@@ -2021,9 +1761,9 @@ The loop, triggers, and sink are reused.
 </div>
 </div>
 </div>
-<h2 id="operations-considerations">Operations considerations</h2>
+<h2 id="monitoring">Monitoring</h2>
 <p>These are the current monitoring and observability options:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="10:3"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><input id="__tabbed_10_3" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Metrics</label><label for="__tabbed_10_2">Health Checks</label><label for="__tabbed_10_3">Logging</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:3"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><input id="__tabbed_8_3" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Metrics</label><label for="__tabbed_8_2">Health checks</label><label for="__tabbed_8_3">Logging</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Martin exposes Prometheus metrics via <code>/_/metrics</code>:</p>
@@ -2048,13 +1788,6 @@ The loop, triggers, and sink are reused.
 </div>
 </div>
 </div>
-<h2 id="related-documentation">Related Documentation</h2>
-<ul>
-<li><a href="../development/">Development Guide</a> - Contributing to Martin</li>
-<li><a href="../config-file/">Configuration</a> - Detailed configuration options</li>
-<li><a href="../using/">API Documentation</a> - HTTP API reference</li>
-<li><a href="../sources-tiles/">Sources Documentation</a> - Tile source configuration</li>
-</ul>
 
 
   <nav class="md-tags" >
@@ -2124,6 +1857,22 @@ The loop, triggers, and sink are reused.
           </a>
         
         
+          
+          <a href="../architecture-sources/" class="md-footer__link md-footer__link--next" aria-label="Next: Sources">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Sources
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
       </nav>
     
   
@@ -2154,7 +1903,7 @@ The loop, triggers, and sink are reused.
       
     
     <a href="https://github.com/maplibre/martin" target="_blank" rel="noopener" title="github.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
     </a>
   
 </div>
@@ -2164,20 +1913,27 @@ The loop, triggers, and sink are reused.
 </footer>
       
     </div>
-    <div class="md-dialog" data-md-component="dialog">
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
     
     
     
       
       
-      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.action.edit","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","header.autohide","navigation.expand","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.prune","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","toc.follow","toc.integrate"],"search":"../assets/javascripts/workers/search.b6b7e04f.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.action.edit","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","header.autohide","navigation.expand","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.prune","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","toc.follow","toc.integrate"],"redirect":null,"search":"../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7f30b55.min.js"></script>
+      <script src="../assets/javascripts/bundle.d31f0ffa.min.js"></script>
+      
+        <script src="../javascripts/keys.js"></script>
       
     
   </body>
