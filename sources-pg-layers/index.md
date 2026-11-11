@@ -303,7 +303,7 @@ postgres:
 
 ## Serving
 
-The tile server renders a table source with `layers` itself instead of asking PostGIS for an `ST_AsMVT` tile. Each request reads the whole geometry of every feature that reaches the tile or its buffer, and renders the tile bulk mode writes for the same `maxzoom`. [Serving tiles](<https://maplibre.org/martin/architecture-generate/#serving-tiles>) shows how.
+The tile server renders a table source with `layers` itself instead of asking PostGIS for an `ST_AsMVT` tile. Each request reads the whole geometry of every feature that reaches the tile or its buffer, and renders the tile bulk mode writes for the same `maxzoom`. [Serving tiles](<https://maplibre.org/martin/architecture-generate/index.md#serving-tiles>) shows how.
 
 - The highest zoom is the table source's `maxzoom`. Without one, it is the highest zoom the `extent` fits: 18 for an `extent` of 4096. A higher `maxzoom` fails at startup.
 - Tiles are MVT, on the Web Mercator tile grid only, and the source takes no URL query parameters.
