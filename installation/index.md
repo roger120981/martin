@@ -16,7 +16,7 @@ export DATABASE_URL=postgres://user:password@host:port/db  # secret!
 docker run -p 3000:3000 \
            -e DATABASE_URL \
            -v /path/to/config/dir:/config \
-           ghcr.io/maplibre/martin:2.0.0-beta.6 \
+           ghcr.io/maplibre/martin:2.0.0-beta.7 \
            --config /config/config.yaml
 ```
 
@@ -78,12 +78,26 @@ To install with apt source and others, we need your help to [improve packaging f
 
 #### Homebrew
 
-If you are using [Homebrew](<https://brew.sh/>) you can install martin using
+If you are using [Homebrew](<https://brew.sh/>) you can install the [`martin` formula from homebrew-core](<https://formulae.brew.sh/formula/martin>) using
 
 ```bash
 brew install martin
 martin --help
 ```
+
+The formula is maintained by Homebrew and follows stable releases only.
+
+> [!TIP]
+>
+> **If you installed martin from the former `maplibre/martin` tap**
+>
+> switch to the homebrew-core formula with
+>
+> ```bash
+> brew uninstall martin
+> brew untap maplibre/martin
+> brew install martin
+> ```
 
 #### Debian packages (x86\_64) manually
 

@@ -169,7 +169,7 @@ export DATABASE_URL=postgres://user:password@host:port/db  # secret!
 docker run -p 3000:3000 \
            -e DATABASE_URL \
            -v /path/to/config/dir:/config \
-           ghcr.io/maplibre/martin:2.0.0-beta.6 \
+           ghcr.io/maplibre/martin:2.0.0-beta.7 \
            --config /config/config.yaml
 ```
 
@@ -231,12 +231,26 @@ To install with apt source and others, we need your help to [improve packaging f
 
 #### Homebrew
 
-If you are using [Homebrew](<https://brew.sh/>) you can install martin using
+If you are using [Homebrew](<https://brew.sh/>) you can install the [`martin` formula from homebrew-core](<https://formulae.brew.sh/formula/martin>) using
 
 ```bash
 brew install martin
 martin --help
 ```
+
+The formula is maintained by Homebrew and follows stable releases only.
+
+> [!TIP]
+>
+> **If you installed martin from the former `maplibre/martin` tap**
+>
+> switch to the homebrew-core formula with
+>
+> ```bash
+> brew uninstall martin
+> brew untap maplibre/martin
+> brew install martin
+> ```
 
 #### Debian packages (x86\_64) manually
 
@@ -483,7 +497,7 @@ You can use official Docker image [`ghcr.io/maplibre/martin`](<https://ghcr.io/m
 ```bash
 docker run \
   -p 3000:3000 \
-  ghcr.io/maplibre/martin:2.0.0-beta.6 \
+  ghcr.io/maplibre/martin:2.0.0-beta.7 \
   postgres://postgres@postgres.example.org/db
 ```
 
@@ -495,7 +509,7 @@ You can expose local files to the Docker container using the `-v` flag.
 docker run \
   -p 3000:3000 \
   -v /path/to/local/files:/files \
-  ghcr.io/maplibre/martin:2.0.0-beta.6 \
+  ghcr.io/maplibre/martin:2.0.0-beta.7 \
   /files
 ```
 
@@ -505,7 +519,7 @@ You can also pass any [CLI flags](<https://maplibre.org/martin/run-with-cli/inde
 docker run \
   -p 3000:3000 \
   -v /path/to/local/files:/files \
-  ghcr.io/maplibre/martin:2.0.0-beta.6 \
+  ghcr.io/maplibre/martin:2.0.0-beta.7 \
   --webui enable-for-all \
   /files
 ```
@@ -519,7 +533,7 @@ For Linux, add the `--net=host` flag to access the `localhost` PostgreSQL servic
 ```bash
 docker run \
   --net=host \
-  ghcr.io/maplibre/martin:2.0.0-beta.6 \
+  ghcr.io/maplibre/martin:2.0.0-beta.7 \
   postgres://postgres@localhost/db
 ```
 
@@ -530,7 +544,7 @@ For macOS, use `host.docker.internal` as hostname to access the `localhost` Post
 ```bash
 docker run \
   -p 3000:3000 \
-  ghcr.io/maplibre/martin:2.0.0-beta.6 \
+  ghcr.io/maplibre/martin:2.0.0-beta.7 \
   postgres://postgres@host.docker.internal/db
 ```
 
@@ -541,7 +555,7 @@ For Windows, use `docker.for.win.localhost` as hostname to access the `localhost
 ```bash
 docker run \
   -p 3000:3000 \
-  ghcr.io/maplibre/martin:2.0.0-beta.6 \
+  ghcr.io/maplibre/martin:2.0.0-beta.7 \
   postgres://postgres@docker.for.win.localhost/db
 ```
 
@@ -552,7 +566,7 @@ You can use example [`docker-compose.yml`](<https://raw.githubusercontent.com/ma
 ```yml
 services:
   martin:
-    image: ghcr.io/maplibre/martin:2.0.0-beta.6
+    image: ghcr.io/maplibre/martin:2.0.0-beta.7
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -602,13 +616,13 @@ Everything can be performed via AWS CloudShell, or you can install the AWS CLI a
 Lambda images must come from a public or private ECR registry. Pull the image from GHCR and push it to ECR.
 
 ```bash
-$ docker pull ghcr.io/maplibre/martin:2.0.0-beta.6 --platform linux/arm64
+$ docker pull ghcr.io/maplibre/martin:2.0.0-beta.7 --platform linux/arm64
 $ aws ecr create-repository --repository-name martin
 […]
         "repositoryUri": "493749042871.dkr.ecr.us-east-2.amazonaws.com/martin",
 
 # Read the repositoryUri which includes your account number
-$ docker tag ghcr.io/maplibre/martin:2.0.0-beta.6 493749042871.dkr.ecr.us-east-2.amazonaws.com/martin:latest
+$ docker tag ghcr.io/maplibre/martin:2.0.0-beta.7 493749042871.dkr.ecr.us-east-2.amazonaws.com/martin:latest
 $ aws ecr get-login-password --region us-east-2 \
   | docker login --username AWS --password-stdin 493749042871.dkr.ecr.us-east-2.amazonaws.com
 $ docker push 493749042871.dkr.ecr.us-east-2.amazonaws.com/martin:latest
@@ -814,7 +828,7 @@ services:
       - martin
 
   martin:
-    image: ghcr.io/maplibre/martin:2.0.0-beta.6
+    image: ghcr.io/maplibre/martin:2.0.0-beta.7
     restart: unless-stopped
     command:
       - postgres://postgres:password@db/db
@@ -2686,8 +2700,9 @@ A function may return tiles that are already gzip or zlib compressed. Martin det
 > - [x] Bulk mode in `martin cp`, and PMTiles output
 > - [x] Layers with CEL expressions, `rules` and `sort_by`
 > - [ ] OSM PBF, shapefile, GeoPackage and CSV files as sources
-> - [ ] `geometry` other than `point`, `line` and `polygon`
-> - [ ] `tile` operations (`merge_lines`, `merge_polygons`, `merge_multi`, `label_grid`, `dedup_by`, `limit`)
+> - [x] `geometry` with Planetiler's `polygon_centroid`, `line_centroid` and `centroid`
+> - [ ] `geometry` with Planetiler's `line_midpoint`, `polygon_centroid_if_convex`, `polygon_point_on_surface`, `point_on_line` and `innermost_point`
+> - [x] [Per-tile operations](<https://maplibre.org/martin/sources-pg-layers/index.md#per-tile-operations>) (`merge_lines`, `merge_polygons`, `thinning`, `merge_multi`, `limit`)
 
 `layers` is a key of a [PostgreSQL table source](<https://maplibre.org/martin/sources-pg-tables/index.md>). It turns one table into one or more output layers, all fed by a single read of the table, each choosing its features, zooms, attributes and draw order. The [bulk mode](<https://maplibre.org/martin/martin-generate/index.md>) of `martin cp` writes them into a tileset, and the tile server renders them on request, see [Serving](<#serving>).
 
@@ -2727,12 +2742,17 @@ Every feature is offered to each layer, which may take it or not. Inside each ti
 | `extent`, `buffer`, `clip_geom` | Override the table source's |  |
 | `simplify`, `simplify_at_maxzoom` | Pixels of tolerance when simplifying lines and polygons | [Simplification](<#simplification-and-minimum-size>) |
 | `min_size`, `min_size_at_maxzoom` | Pixels, below which lines and polygons are dropped | [Simplification](<#simplification-and-minimum-size>) |
-| `geometry` | `point`, `line` or `polygon`: only features of that type | [Features](<#features>) |
+| `geometry` | Only features of one type, or a point computed from each | [Geometry](<#geometry>) |
 | `where` | An expression: only features for which it is `true` | [Features](<#features>) |
 | `attributes` | Which properties to write, and under which names | [Attributes](<#attributes>) |
 | `id` | `true` (default), `false`, or an expression | [Feature ids](<#feature-ids>) |
 | `rules` | Different zooms, simplification and attributes for some features | [Rules](<#rules>) |
 | `sort_by` | The draw order of the layer's features in each tile | [Draw order](<#draw-order>) |
+| `merge_lines` | Joins lines whose ends meet in one tile | [Per-tile operations](<#per-tile-operations>) |
+| `merge_polygons` | Unions polygons of a group in one tile | [Per-tile operations](<#per-tile-operations>) |
+| `thinning` | Drops features crowded out by earlier ones in one tile | [Per-tile operations](<#per-tile-operations>) |
+| `merge_multi` | One multi-geometry per group in one tile | [Per-tile operations](<#per-tile-operations>) |
+| `limit` | The most features of the layer in one tile | [Per-tile operations](<#per-tile-operations>) |
 
 `extent`, `buffer` and `clip_geom` default to the table source's, then to 4096, 64 and `true`. `extent` must be a power of two from 64 to 2097152, and `buffer` less than half the `extent`. With `clip_geom: false`, every tile a line or polygon reaches holds all of it, not just its part there.
 
@@ -2773,12 +2793,12 @@ The layer's max zoom is its highest zoom after narrowing, not the highest zoom o
 A feature belongs to a layer when all of these hold:
 
 1. the table source's `filter`, which the database applies while reading,
-2. the layer's `geometry` type, if set,
+2. the type the layer's [`geometry`](<#geometry>) takes, if set,
 3. the layer's `where` expression, if set. `null` and failed evaluations count as `false`.
 
 A [rule](<#rules>)'s `where` is not one of them. A feature that matches no rule stays in the layer.
 
-The database also applies the `geometry` and `where` of every layer at the zoom being read, so rows no layer takes are never read. This needs a SQL equivalent for each `where` of the table. These have one:
+The database also applies the geometry type and `where` of every layer at the zoom being read, so rows no layer takes are never read. This needs a SQL equivalent for each `where` of the table. These have one:
 
 - comparisons of a column with a literal,
 - `==` or `!=` between two columns, unless both are floats,
@@ -2787,6 +2807,21 @@ The database also applies the `geometry` and `where` of every layer at the zoom 
 - `size`, `startsWith`, `endsWith`, `contains`, `lowerAscii` and `upperAscii` on a string column, compared with a literal.
 
 Columns of type `bpchar` or `name` have none, as PostgreSQL compares them differently. When a layer reads a `jsonb` property, no `where` has one, as any key may share a column's name. Listing `attributes` without the `jsonb` property's keys avoids that. Without a SQL equivalent, Martin reads every row and checks `where` itself, with the same result.
+
+### Geometry
+
+`geometry` sets the features a layer takes and what it draws for each, with Planetiler's names:
+
+| `geometry` | Takes | Draws |
+| --- | --- | --- |
+| `point` | points | the points |
+| `line` | lines | the lines |
+| `polygon` | polygons | the polygons |
+| `polygon_centroid` | polygons | the centroid, a point |
+| `line_centroid` | lines | the centroid, a point |
+| `centroid` | all | the centroid, a point |
+
+The centroid is area-weighted for polygons, length-weighted for lines, and the mean for points, over all parts of a multi-geometry. It can lie outside a concave polygon. It is computed once per feature, in Web Mercator, and drawn like any point: only in the tiles it reaches, with no `min_size`, and [per-tile operations](<#per-tile-operations>) see a point.
 
 ## Attributes
 
@@ -2866,6 +2901,182 @@ postgres:
 ```
 
 Values order by type first: `null` (and failed evaluations), booleans, integers, floating-point numbers, then strings. Any integer sorts before any floating-point number, so convert mixed numbers with `double(...)` to compare them by value. `desc` reverses the whole order, so `null` comes last.
+
+## Per-tile operations
+
+Most layer keys act on one feature at a time. A per-tile operation acts on the layer's whole feature list in one tile, after [`sort_by`](<#draw-order>) has ordered it and just before the tile is encoded. Each operation is a layer key, named after the operation, with that operation's options. A table source cannot set one, and a rule only a grid [`thinning`](<#thinning>).
+
+```yaml
+postgres:
+  tables:
+    shops:
+      schema: public
+      table: shops
+      geometry_column: geom
+      properties:
+        name: text
+        rank: int4
+      layers:
+        shops:
+          sort_by: [rank]
+          limit:
+            - { maxzoom: 10, count: 50 }   # z0 to z10
+            - { minzoom: 11, count: 200 }  # z11 and up
+```
+
+Operations run in this order, whatever order they are written in:
+
+| Order | Operation | Does |
+| --- | --- | --- |
+| 1 | `merge_lines` | Joins lines whose ends meet and attributes are equal |
+| 2 | `merge_polygons` | Unions a group's polygons |
+| 3 | `thinning` | Drops features an earlier one with the same key crowds out |
+| 4 | `merge_multi` | Combines a group's features of one type into a multi-feature |
+| 5 | `limit` | Keeps the first `count` features, in order |
+
+Every operation takes `minzoom` and `maxzoom`, numbers clamped to the layer's zooms. Outside them the operation is skipped and features pass through unchanged. For different settings at different zooms, give a list of option maps instead of one map; their zoom ranges must not overlap. An operation whose zooms miss the layer's entirely is dropped with a warning.
+
+Merging operations group features by the values of attributes: `merge_lines` by all of them, `merge_polygons` by those in `group_by`, or all of them when it is unset, and `merge_multi` by those in `group_by`. Values compare by type too, so `1` and `"1"` are different groups, and a feature without a `group_by` attribute groups with others without it. A merged feature takes the place of the first feature of its group. It keeps a feature id only if all of its group has the same one.
+
+Since operations keep the first features of the list, `sort_by` decides which features survive. A layer without `sort_by` keeps the order features are read in, which the tile server does not fix, see [Draw order](<#draw-order>).
+
+After a bulk run, Martin logs each operation of each layer with the tiles it ran on and the features it took and kept, and warns about groups a merge could not make valid:
+
+```text
+INFO Ran `limit` layer.id=roads tiles=22 features.input=264 features.output=202
+```
+
+The output does not depend on `--threads`. Tiles served with or without `prefetch` equal the bulk ones of `--format mvt` for layers with a `sort_by`.
+
+### `merge_lines`
+
+Joins lines whose attributes are all equal into longer lines, so a road cut into many segments becomes one, which lets clients place labels along it. Where exactly two line ends meet, at the same tile coordinates, the lines are joined; where three or more meet, as at a junction, they are not. The joined lines are simplified by `tolerance`, the same way `simplify` does it, clipped to the tile and `buffer`, and dropped when their length inside is below `min_length`. The lines of equal attributes become one line or multi-line feature, or nothing if no line is left. Joining may reverse a line's direction. To join lines that differ in some attribute, leave it out of `attributes` at those zooms.
+
+```yaml
+merge_lines:
+  - { maxzoom: 10, min_length: 1, tolerance: 0.5 }
+  - { minzoom: 11, maxzoom: 13, min_length: 0.25 }
+```
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `min_length` | 0 | Pixels; shorter merged lines are dropped |
+| `tolerance` | 0 | Pixels; simplifies the merged lines, 0 keeps every vertex |
+| `buffer` | the layer's buffer | Pixels around the tile kept after merging, at most the layer's |
+| `minzoom`, `maxzoom` | the layer's zooms | Where it runs |
+
+Planetiler's `mergeLineStrings` joins lines the same way at plain joints, and also joins strokes through junctions and drops short stubs and loops, which `merge_lines` does not.
+
+Each tile joins, simplifies and measures only what it holds of the lines, in the tile and `buffer`. A line ending just past a tile edge can be shorter than `min_length` in the next tile and is dropped there, and the two tiles' simplified lines can cross their shared edge at different points.
+
+### `merge_polygons`
+
+Unions the polygons of a group, such as adjacent land use areas of one kind, as Planetiler's `mergeNearbyPolygons` does, or `mergeOverlappingPolygons` with `distance: 0`. The polygons are first clipped to the tile and `buffer`. With a `distance`, they are grown by half of it, merged and shrunk again, which joins polygons closer than `distance`. Holes smaller than `min_hole_area` are then filled, polygons smaller than `min_area` dropped, and the result snapped to the tile grid. Each group becomes one polygon or multi-polygon feature, or nothing. A group whose union is not valid once snapped keeps its features as they were, and the first such group is logged. The run summary counts them.
+
+```yaml
+merge_polygons:
+  maxzoom: 12
+  min_area: 4        # px²
+  min_hole_area: 1   # px²
+  distance: 0.5      # px
+  group_by: [kind]
+```
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `min_area` | 0 | Square pixels; smaller merged polygons are dropped |
+| `min_hole_area` | 0 | Square pixels; smaller holes are filled |
+| `distance` | 0 | Pixels; closer polygons are joined, 0 joins touching ones |
+| `buffer` | the layer's buffer | Pixels around the tile kept after merging, at most the layer's |
+| `group_by` | every attribute | The attributes polygons must share |
+| `minzoom`, `maxzoom` | the layer's zooms | Where it runs |
+
+A covered tile's fill is a square over the tile and its buffer, merged like any other polygon.
+
+Each tile merges only what it holds of the polygons, in the tile and `buffer`, so `min_area` counts only that part. A polygon reaching just past a tile edge can be dropped from the next tile.
+
+### `thinning`
+
+Drops a feature when an earlier kept feature, in draw order, crowds it out, so give the layer a `sort_by`. `method` says what crowds a feature out:
+
+| `method` | A feature is dropped when |
+| --- | --- |
+| `grid` | its square already holds `limit` kept points |
+| `distance` | a kept feature lies within `distance` of it |
+| `tile` | a kept feature is anywhere in the tile |
+
+With `keys`, a list of CEL expressions, only features with the same key values crowd each other out, such as a road name drawn many times. Without `keys`, every feature competes with every other.
+
+```yaml
+postgres:
+  tables:
+    places:
+      schema: public
+      table: places
+      geometry_column: geom
+      buffer: 1024        # 64 px of a 4096 extent, the grid's size
+      properties:
+        name: text
+        kind: text
+        population: int8
+      layers:
+        places:
+          geometry: point
+          sort_by: [{ expr: "population", desc: true }]
+          thinning:
+            - { maxzoom: 9, method: grid, size: 64, limit: 2 }
+            - { minzoom: 10, method: distance, distance: 64, keys: [name] }
+          rules:
+            - where: "kind == 'capital'"
+              thinning: null   # capitals are never thinned out by the grid
+            - where: "kind == 'village'"
+              thinning: { maxzoom: 9, method: grid, size: 128, limit: 1 }
+```
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `method` | required | `grid`, `distance` or `tile` |
+| `size` | required by `grid` | Side of a square above 0, in pixels of a 256-pixel tile |
+| `limit` | required by `grid` | Points kept per square and key in each tile, 1 or more |
+| `distance` | required by `distance` | Pixels within which a feature with the same key is dropped |
+| `keys` | one key for all; required by `tile` | CEL expressions forming the key |
+| `minzoom`, `maxzoom` | the layer's zooms | Where it runs |
+
+`grid` thins out points, such as labels, the way Planetiler's point label grid does. At each zoom it covers, the world is cut into squares of `size` pixels, aligned to the world rather than to tiles. Each point counts against its own `limit` in the square it falls in, so points of one layer with different sizes share a count when their squares have the same column and row, as in Planetiler. A multi-point is split into its points, each kept or dropped on its own. Lines and polygons pass through. Squares smaller than one unit of the layer's `extent` do not limit anything. A square crossing a tile edge is counted the same way in both tiles only when each sees all of its points, so set the layer's `buffer` to at least `size` pixels. A warning tells you when it is smaller.
+
+A rule may set its own grid `thinning` for the features it takes, without `keys`, replacing the layer's grid, or `null` to turn the grid off for them. `distance` and `tile` thinning see every feature of the layer; to spare some features, give them a key of only `null`s.
+
+`distance` places each feature at a representative point of what the tile holds of it, in the tile and its buffer: a point itself, the middle of a line's longest part, or a point inside a polygon. A line crossing a tile edge has a different one in each tile. Features on either side of a tile edge crowd each other out the same way in both tiles only when the layer's `buffer` is at least `distance` pixels.
+
+`tile` keeps the first feature of each key in the tile and its buffer. That can be a feature that only reaches into the buffer, which leaves no feature of its key inside the tile.
+
+Unlike `where`, `id` and attribute expressions, which read the source's properties, `keys` read the feature's output attributes at this zoom by their output names, after `attributes`, `rules` and each attribute's zooms, as Planetiler's layer post-processing sees features. A name the layer does not write fails the run before rendering. A feature whose key values are all `null` is never thinned out. A failed evaluation counts as `null`, and is counted and logged once like other expressions.
+
+### `merge_multi`
+
+Combines the features of a group into one multi-point, multi-line or multi-polygon per geometry type, without changing any geometry, the parts in draw order, as Planetiler's `mergeMultiPoint`, `mergeMultiLineString` and `mergeMultiPolygon` do. A point alone in its group stays a point. Every feature of a type in `geometry` keeps only its `group_by` attributes, even one alone in its group.
+
+Each tile combines only the features it holds, in the tile and its buffer, so a multi-feature never spans tiles and a point in the buffer is a part in both tiles.
+
+```yaml
+merge_multi:
+  geometry: [point]   # only combine points; lines and polygons pass through
+  group_by: [kind]
+```
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `geometry` | `[point, line, polygon]` | The types to combine; others pass through |
+| `group_by` | required, 1 or more | The attributes features share and keep |
+| `minzoom`, `maxzoom` | the layer's zooms | Where it runs |
+
+### `limit`
+
+Keeps the first `count` features of the layer in the tile and drops the rest. `count: 0` leaves the layer out of the tile. `limit: 100` is short for `limit: { count: 100 }`.
+
+Features in the tile's buffer count too, so a feature near a tile edge can be kept in its own tile and dropped from the buffer of the next.
+
+Unlike `max_feature_count` of a table source, which limits the rows read for a tile, `limit` limits the features written to it.
 
 ## Expressions
 
@@ -3001,8 +3212,8 @@ postgres:
 
 ## Validation
 
-- **Reading the configuration** fails on invalid values, with their line and column: a zoom above 30, a negative `simplify`, a `minzoom` above `maxzoom`, an expression that is not valid CEL, or `layer_id` together with `layers`. Unknown keys are warned about.
-- **Before rendering**, after connecting to the database, the run fails on unknown property names, duplicate layer names, more than 256 layers, a zoom above 27, and the settings that are not supported yet.
+- **Reading the configuration** fails on invalid values, with their line and column: a zoom above 30, a negative `simplify`, a `minzoom` above `maxzoom`, an expression that is not valid CEL, `layer_id` together with `layers`, overlapping zoom ranges in one per-tile operation's list, a `thinning` option its `method` does not take, or a per-tile operation on a table source or, except a grid `thinning`, in a rule. Unknown keys are warned about.
+- **Before rendering**, after connecting to the database, the run fails on unknown property names, duplicate layer names, more than 256 layers, a zoom above 27, and the settings that are not supported yet, and on a `group_by` attribute the layer does not write. It warns about a per-tile operation whose zooms miss the layer's, and drops it, about one that never acts on the layer's `geometry`, and about a grid `thinning` with squares larger than the layer's `buffer`.
 
 [`martin test`](<https://maplibre.org/martin/martin-test/index.md>) checks what the layers make of real rows of the database, and keeps it in a spec file.
 
@@ -5055,7 +5266,7 @@ On the CPU, Mesa (`lavapipe`) compiles every new renderer's shaders and caches t
 When neither directory is writable, as in a read-only container, Martin caches shaders in a private directory under `$TMPDIR` (`/tmp` unless set) until it exits, and logs that it did. If that is read-only too, it logs a warning and Mesa compiles shaders again for every renderer. For a read-only container, mount a small `tmpfs` at `/tmp` (the cache stays under a few MB), or set `MESA_SHADER_CACHE_DIR` to a writable volume to keep the cache across restarts:
 
 ```bash
-docker run --read-only --tmpfs /tmp ... ghcr.io/maplibre/martin:2.0.0-beta.6-full
+docker run --read-only --tmpfs /tmp ... ghcr.io/maplibre/martin:2.0.0-beta.7-full
 ```
 
 Martin leaves `MESA_SHADER_CACHE_DIR` and `MESA_SHADER_CACHE_DISABLE` alone when they are set.
@@ -6774,8 +6985,9 @@ See https://docs.rs/tracing-subscriber/latest/tracing_subscriber/filter/struct.E
 > - [x] Bulk mode in `martin cp`, and PMTiles output
 > - [x] Layers with CEL expressions, `rules` and `sort_by`
 > - [ ] OSM PBF, shapefile, GeoPackage and CSV files as sources
-> - [ ] `geometry` other than `point`, `line` and `polygon`
-> - [ ] `tile` operations (`merge_lines`, `merge_polygons`, `merge_multi`, `label_grid`, `dedup_by`, `limit`)
+> - [x] `geometry` with Planetiler's `polygon_centroid`, `line_centroid` and `centroid`
+> - [ ] `geometry` with Planetiler's `line_midpoint`, `polygon_centroid_if_convex`, `polygon_point_on_surface`, `point_on_line` and `innermost_point`
+> - [x] [Per-tile operations](<https://maplibre.org/martin/sources-pg-layers/index.md#per-tile-operations>) (`merge_lines`, `merge_polygons`, `thinning`, `merge_multi`, `limit`)
 
 A long-requested Martin feature is generating tiles on the fly from a feature source (raw data) inside Martin itself, when serving tiles. Until now, a source had to either already contain tiles (MBTiles, PMTiles) or generate them itself, like PostgreSQL does with `ST_AsMVT`.
 
@@ -6976,6 +7188,17 @@ cases:
 1. The row's `id_column`, the columns the layers read, and its geometry as WKT. `run` reports `ROW CHANGED` when the row no longer matches.
 2. What bulk mode writes: one entry per feature and layer, with its zooms and attributes.
 
+A layer with [per-tile operations](<https://maplibre.org/martin/sources-pg-layers/index.md#per-tile-operations>) also gets a `per_tile` list: the tiles each operation ran on, and the features it took and kept there. A changed count fails the case like a changed output.
+
+```yaml
+  per_tile:
+  - layer: shops
+    op: limit
+    tiles: 9
+    features_in: 9
+    features_out: 4  # `count: 0` leaves the layer out of the z2 tiles
+```
+
 ## Running
 
 After changing `minzoom` to `"class == 'primary' ? 7 : 12"`:
@@ -6994,7 +7217,7 @@ In a terminal, `generate` opens a review. `--accept` writes every case instead. 
 
 Martin includes `mbtiles` utility to interact with the [`*.mbtiles` files](<https://maplibre.org/martin/mbtiles-schema/index.md>) from the command line. It allows users to [examine](<https://maplibre.org/martin/mbtiles-meta/index.md>), [copy](<https://maplibre.org/martin/mbtiles-copy/index.md>), [validate](<https://maplibre.org/martin/mbtiles-validation/index.md>) or [compare and apply diffs between them](<https://maplibre.org/martin/mbtiles-diff/index.md>).
 
-This tool can be installed by compiling the latest released version with `cargo install mbtiles --locked`, or by downloading a pre-built binary from the [releases page](<https://github.com/maplibre/martin/releases/latest>).
+This tool can be installed with `cargo binstall mbtiles`, by compiling the latest released version with `cargo install mbtiles --locked`, or by downloading a pre-built `mbtiles-<target>` archive from the latest [`mbtiles-v*` release](<https://github.com/maplibre/martin/releases?q=mbtiles-v&amp;expanded=true>). The Martin archives and Debian package do not include it.
 
 Use `mbtiles --help` to see a list of available commands:
 
@@ -7369,11 +7592,19 @@ There are two exceptions to this. The first is that the `agg_tiles_hash` value w
 
 The second exception is that a new metadata value `agg_tiles_hash_before_apply` will be added to the diff file, which contains the `agg_tiles_hash` value from `file1.mbtiles`. This will be used to verify that the diff file is being applied to the correct source file.
 
+If either input file has no `agg_tiles_hash`, it is computed on the fly (but not saved to the input file), so the diff file always gets both values. Diffing a file that is itself a diff is refused unless `--force` is used.
+
 ## `mbtiles apply-patch`
 
 Apply the diff file generated with the `mbtiles diff` command above to an MBTiles file. The diff file can be applied to the `src_file.mbtiles` that has been previously downloaded to avoid copying/transmitting the entire modified dataset again. The `src_file.mbtiles` will modified in-place. It is also possible to apply the diff file while copying the source file to a new destination file, by using the [`mbtiles copy --apply-patch`](<https://maplibre.org/martin/mbtiles-copy/index.md#mbtiles-copy-apply-patch>) command.
 
-Note that the `agg_tiles_hash_after_apply` metadata value will be renamed to `agg_tiles_hash` when applying the diff. This is done to avoid confusion when applying the diff file to the original file, as the `agg_tiles_hash` value will be different after the diff is applied.
+Both `apply-patch` and `copy --apply-patch` check the hashes:
+
+- before patching, the source file's `agg_tiles_hash` must equal the diff's `agg_tiles_hash_before_apply`. A missing `agg_tiles_hash` is computed. Use `--validate` to recompute it even when it is stored, in case the tiles were edited without updating the hash.
+- the diff file must have its own `agg_tiles_hash`, `agg_tiles_hash_before_apply` and `agg_tiles_hash_after_apply`.
+- after patching, the result's `agg_tiles_hash` is recomputed and must equal `agg_tiles_hash_after_apply`. `apply-patch` runs in a single transaction, so on a mismatch the source file is left untouched.
+
+`--force` turns these errors into warnings.
 
 ```bash
 mbtiles apply-patch src_file.mbtiles diff_file.mbtiles
@@ -8404,8 +8635,9 @@ Each kind has at least one Reload Driver instance. Adding reload support for a n
 > - [x] Bulk mode in `martin cp`, and PMTiles output
 > - [x] Layers with CEL expressions, `rules` and `sort_by`
 > - [ ] OSM PBF, shapefile, GeoPackage and CSV files as sources
-> - [ ] `geometry` other than `point`, `line` and `polygon`
-> - [ ] `tile` operations (`merge_lines`, `merge_polygons`, `merge_multi`, `label_grid`, `dedup_by`, `limit`)
+> - [x] `geometry` with Planetiler's `polygon_centroid`, `line_centroid` and `centroid`
+> - [ ] `geometry` with Planetiler's `line_midpoint`, `polygon_centroid_if_convex`, `polygon_point_on_surface`, `point_on_line` and `innermost_point`
+> - [x] [Per-tile operations](<https://maplibre.org/martin/sources-pg-layers/index.md#per-tile-operations>) (`merge_lines`, `merge_polygons`, `thinning`, `merge_multi`, `limit`)
 
 The [bulk mode](<https://maplibre.org/martin/martin-generate/index.md>) of `martin cp` turns whole sources into a tileset in two phases. First, every feature is read once and rendered into tile pieces, which are sorted on disk by tile. Then the sorted pieces are merged back into tiles, encoded, and written in the order the archive stores them. Every step hands its work to the next through a bounded queue, so the whole run needs a fixed amount of memory, whatever the input size.
 
@@ -8524,9 +8756,9 @@ When one batch is slow, for example a dense city at a high zoom, the other encod
 
 ### Repeated tiles
 
-Each encoder assembles the tile's layers from its records, encodes them as MLT or MVT, and compresses the result. It also avoids work and storage for repeated tiles:
+Each encoder assembles the tile's layers from its records, orders each layer's features by `sort_by`, runs the layer's [per-tile operations](<https://maplibre.org/martin/sources-pg-layers/index.md#per-tile-operations>) on them, encodes them as MLT or MVT, and compresses the result. A layer the operations leave empty is left out of the tile. It also avoids work and storage for repeated tiles:
 
-- A tile with the same records as the encoder's previous tile reuses its bytes without encoding. Neighboring tiles in the archive order are often identical, for example the inside of a large polygon.
+- A tile with the same records as the encoder's previous tile of the same zoom reuses its bytes without encoding. The operations depend only on the records and the zoom, so the bytes are the same. Neighboring tiles in the archive order are often identical, for example the inside of a large polygon.
 - A reused tile, and a tile made only of fill records, gets a dedup key from an index shared by all encoders. The index only hands out a key for bytes equal to the first tile with that hash.
 
 The archive stores tiles with the same dedup key once. Other identical tiles are stored separately.
@@ -8610,6 +8842,12 @@ martin cp --output-file tileset.mbtiles --source my_source postgres://postgres@l
 ```
 
 See [Generating Tiles in Bulk](<https://maplibre.org/martin/martin-cp/index.md>).
+
+### `mbtiles` is released separately
+
+The Martin release archives and Debian package contain only `martin`. Get `mbtiles` from the `mbtiles-<target>` archives on the [`mbtiles-v*` releases](<https://github.com/maplibre/martin/releases?q=mbtiles-v&amp;expanded=true>), with `cargo binstall mbtiles`, or from the Docker image, which still includes it.
+
+See [MBTiles tool](<https://maplibre.org/martin/mbtiles/index.md>).
 
 ### The terminal dashboard is on by default
 
@@ -8836,6 +9074,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](<https://keepachangelog.com/en/1.0.0/>), and this project adheres to [Semantic Versioning](<https://semver.org/spec/v2.0.0.html>).
 
 ## \[Unreleased\]
+
+## [2.0.0-beta.7](<https://github.com/maplibre/martin/compare/martin-v2.0.0-beta.6...martin-v2.0.0-beta.7>) - 2026-11-11
+
+> \[!NOTE\] This is the seventh beta of Martin 2.0. It has three breaking changes relative to [2.0.0-beta.6](<https://github.com/maplibre/martin/releases/tag/martin-v2.0.0-beta.6>), listed below. If you are coming from 1.x, read the [migration guide](<https://maplibre.org/martin/migration-guide/>) first.
+
+### Breaking changes
+
+- The Martin release archives and the Debian package contain only `martin`. `mbtiles` is attached to the `mbtiles-v*` releases instead, as `mbtiles-<target>` archives with their own SBOM, and the Docker image still includes both ([\#3917](<https://github.com/maplibre/martin/pull/3917>)). See [`mbtiles` is released separately](<https://maplibre.org/martin/migration-guide/#mbtiles-is-released-separately>).
+- The `maplibre/martin` Homebrew tap is no longer updated. `brew install martin` installs the [homebrew-core formula](<https://formulae.brew.sh/formula/martin>), which follows stable releases only ([\#3918](<https://github.com/maplibre/martin/pull/3918>)). Switch with `brew uninstall martin && brew untap maplibre/martin && brew install martin`. See [installation](<https://maplibre.org/martin/installation/>).
+- The derived `geometry` values of table `layers` have Planetiler's names: `centroid_if_convex` is now `polygon_centroid_if_convex`, `label_point` is gone, and `polygon_centroid`, `line_centroid`, `polygon_point_on_surface` and `point_on_line` are new ([\#3913](<https://github.com/maplibre/martin/pull/3913>)).
+
+### Added
+
+- Table [`layers`](<https://maplibre.org/martin/sources-pg-layers/#per-tile-operations>) take per-tile operations, which act on a layer's whole feature list in one tile, after `sort_by`: `merge_lines` joins lines whose ends meet, `merge_polygons` unions a group's polygons, `thinning` drops features crowded out by earlier ones (`method: grid`, `distance` or `tile`), `merge_multi` combines a group into one multi-feature, and `limit` keeps the first `count` features ([\#3902](<https://github.com/maplibre/martin/pull/3902>), [\#3903](<https://github.com/maplibre/martin/pull/3903>), [\#3904](<https://github.com/maplibre/martin/pull/3904>), [\#3905](<https://github.com/maplibre/martin/pull/3905>), [\#3906](<https://github.com/maplibre/martin/pull/3906>), [\#3907](<https://github.com/maplibre/martin/pull/3907>)). Each one can take different settings per zoom range, and a bulk run logs what each did. They work in bulk mode and when `layers` are served. The configuration of `layers` may still change.
+
+```yaml
+layers:
+  pois:
+    sort_by: [rank]
+    thinning: { method: grid, size: 64, limit: 1 }
+    limit:
+      - { maxzoom: 10, count: 50 }
+      - { minzoom: 11, count: 200 }
+```
+
+- `geometry: polygon_centroid`, `line_centroid` and `centroid` draw a feature as its centroid point. Before, they were refused ([\#3920](<https://github.com/maplibre/martin/pull/3920>)).
+- `martin cp --mode bulk` shows each stage, a progress bar with an ETA and how busy the merge, encode and write threads are, updated every 250 ms. Without a terminal, it still logs every 10 s ([\#3911](<https://github.com/maplibre/martin/pull/3911>), [\#3931](<https://github.com/maplibre/martin/pull/3931>)). See [Generating Tilesets](<https://maplibre.org/martin/martin-generate/>).
+- The web UI is redesigned, with fixes for mobile layouts, dark mode and contrast. Tile thumbnails load only once their card is near the viewport, at most 4 at a time ([\#3921](<https://github.com/maplibre/martin/pull/3921>), [\#3922](<https://github.com/maplibre/martin/pull/3922>)).
+- When `$XDG_CACHE_HOME` and `~/.cache` are not writable, as in a read-only container, rendering keeps Mesa's shader cache in a temporary directory until Martin exits. With renderers being replaced, a request went from 622 to 108 ms ([\#3898](<https://github.com/maplibre/martin/pull/3898>)). See [Shader cache](<https://maplibre.org/martin/sources-styles/rendering/#shader-cache>).
+
+### Fixed
+
+- `mbtiles diff` computes a missing `agg_tiles_hash` instead of refusing, so every diff records the hash before and after. `mbtiles apply-patch` and `mbtiles copy --apply-patch` check the base file's hash first, and `apply-patch` rolls back when the result does not match. `apply-patch --validate` recomputes the base hash instead of trusting the stored one ([\#1244](<https://github.com/maplibre/martin/issues/1244>), [\#3916](<https://github.com/maplibre/martin/pull/3916>)). See [Diffing MBTiles](<https://maplibre.org/martin/mbtiles-diff/>).
+- A local PMTiles archive renamed over a source while it opens is noticed on the first read, and the source reloads. Before, the old file was served until the next change ([\#3897](<https://github.com/maplibre/martin/pull/3897>)).
+- `actix-http` 3.20.3 and `actix-web` 4.18.2 fix RUSTSEC-2026-0446, RUSTSEC-2026-0447 and RUSTSEC-2026-0448 ([\#3912](<https://github.com/maplibre/martin/pull/3912>)).
+
+### Performance
+
+- Local PMTiles archives bigger than memory are served without the 2.0 slowdown, by reading the file instead of a memory map. On OpenFreeMap's 87 GB planet on a c8g.xlarge, Martin served 11,000 tiles/s at p99 under 50 ms, against 1,750 for 2.0.0-beta.4 and 5,500 for 1.16.1 ([\#3858](<https://github.com/maplibre/martin/pull/3858>)). A local archive is checked for changes at most once a second, off the async workers, so a changed archive is noticed up to a second later ([\#3900](<https://github.com/maplibre/martin/pull/3900>)).
+- A connection waiting on a slow client keeps a reference to the tile instead of its own copy. With 1,000 stalled clients on Berlin's 50 largest tiles, memory per client fell from 193 KB to 12.5 KB (`actix-http` 3.21.0) ([\#3923](<https://github.com/maplibre/martin/pull/3923>)).
+
+### Unstable
+
+> \[!WARNING\] None of this is in the release binaries. It needs a build with `--features unstable-duckdb`, and its configuration may still change.
+
+- DuckDB S3 secrets are built from the same options as the object store. `aws_endpoint_url_s3` always wins over `aws_endpoint`, and `skip_signature` also accepts `on`, `yes` and `y` ([\#3872](<https://github.com/maplibre/martin/pull/3872>)).
+- A directory given on the command line no longer fails as an unrecognizable connection. Before, DuckDB skipping it undid the claim of the file sources before it ([\#3893](<https://github.com/maplibre/martin/pull/3893>)).
+
+### Other
+
+- *(docs)* schema examples for the optional DuckDB fields ([\#3894](<https://github.com/maplibre/martin/pull/3894>))
+- *(ci)* more reliable CI and release PRs ([\#3892](<https://github.com/maplibre/martin/pull/3892>), [\#3896](<https://github.com/maplibre/martin/pull/3896>), [\#3899](<https://github.com/maplibre/martin/pull/3899>), [\#3924](<https://github.com/maplibre/martin/pull/3924>), [\#3925](<https://github.com/maplibre/martin/pull/3925>), [\#3930](<https://github.com/maplibre/martin/pull/3930>))
 
 ## [2.0.0-beta.6](<https://github.com/maplibre/martin/compare/martin-v2.0.0-beta.5...martin-v2.0.0-beta.6>) - 2026-11-04
 
